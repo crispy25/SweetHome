@@ -10,7 +10,7 @@
 	</parent>
 	<artifactId>springbackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>auth-server</name>
+	<name>sweethome-server</name>
 	<description>Authorization Server for natural language to sql thesis</description>
 	<properties>
 		<java.version>17</java.version>
