@@ -1,20 +1,16 @@
 package com.sweethome.backend.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-@Setter
 @MappedSuperclass
 public abstract class PropertyListing {
     @Id
@@ -36,22 +32,28 @@ public abstract class PropertyListing {
     private String address;
 
     @NotNull
+    @Positive
     @Column(name = "rooms", nullable = false)
     private Integer rooms;
 
     @NotNull
+    @PositiveOrZero
     @Column(name = "bathrooms", nullable = false)
     private Integer bathrooms;
 
     @NotNull
+    @Positive
     @Column(name = "usable_area", nullable = false, precision = 6, scale = 2)
     private BigDecimal usableArea;
 
     @NotNull
+    @Min(1500)
+    @Max(2100)
     @Column(name = "construction_year", nullable = false)
     private Integer constructionYear;
 
     @NotNull
+    @Positive
     @Column(name = "price", nullable = false, precision = 9, scale = 2)
     private BigDecimal price;
 
@@ -68,4 +70,60 @@ public abstract class PropertyListing {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "last_updated")
     private Instant lastUpdated;
+
+    public PropertyListing setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public PropertyListing setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public PropertyListing setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public PropertyListing setRooms(Integer rooms) {
+        this.rooms = rooms;
+        return this;
+    }
+
+    public PropertyListing setBathrooms(Integer bathrooms) {
+        this.bathrooms = bathrooms;
+        return this;
+    }
+
+    public PropertyListing setUsableArea(BigDecimal usableArea) {
+        this.usableArea = usableArea;
+        return this;
+    }
+
+    public PropertyListing setConstructionYear(Integer constructionYear) {
+        this.constructionYear = constructionYear;
+        return this;
+    }
+
+    public PropertyListing setPrice(BigDecimal price) {
+        this.price = price;
+        return this;
+    }
+
+    public PropertyListing setSeller(User seller) {
+        this.seller = seller;
+        return this;
+    }
+
+    public PropertyListing setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+        return this;
+    }
+
+    public PropertyListing setLastUpdated(Instant lastUpdated) {
+        this.lastUpdated = lastUpdated;
+        return this;
+    }
+
 }

@@ -1,39 +1,50 @@
 package com.sweethome.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "apartment_listing", schema = "project")
 public class ApartmentListing extends PropertyListing {
-    @Getter
     public enum ApartmentLayout {
-        DETACHED("Detached"),
-        DUPLEX("Semi-detached"),
-        TRIPLEX("Non-detached"),
-        OTHER("Circular");
-
-        private final String dbValue;
-
-        ApartmentLayout(String dbValue) {
-            this.dbValue = dbValue;
-        }
+        DETACHED,
+        SEMI_DETACHED,
+        NON_DETACHED,
+        CIRCULAR;
     }
 
     @NotNull
+    @Min(1)
+    @Max(4)
     @Column(name = "comfort", nullable = false)
     private Integer comfort;
     @NotNull
     @Column(name = "floor", nullable = false)
     private Integer floor;
+    @Enumerated(EnumType.STRING)
     @Column(name = "layout", columnDefinition = "apartment_layout not null")
     private ApartmentLayout layout;
+
+    public ApartmentListing setComfort(Integer comfort) {
+        this.comfort = comfort;
+        return this;
+    }
+
+    public ApartmentListing setFloor(Integer floor) {
+        this.floor = floor;
+        return this;
+    }
+
+    public ApartmentListing setLayout(ApartmentLayout layout) {
+        this.layout = layout;
+        return this;
+    }
 }
