@@ -1,80 +1,42 @@
 package com.sweethome.backend.service.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 
 @Getter
-@Component
 public abstract class PropertyListingDto {
 
+    @NotNull(message = "Title must not be null")
     private String title;
+    @NotNull(message = "Description must not be null")
     private String description;
+    @NotNull(message = "Address must not be null")
     private String address;
+
+    @NotNull(message = "Rooms must not be null")
+    @Positive(message = "Rooms must be greater than 0")
     private Integer rooms;
+
+    @NotNull(message = "Bathrooms must not be null")
+    @PositiveOrZero(message = "Bathrooms must be 0 or greater")
     private Integer bathrooms;
+
+    @NotNull(message = "Usable area must not be null")
+    @Positive(message = "Usable area must be greater than 0")
     private BigDecimal usableArea;
+
+    @NotNull(message = "Construction year must not be null")
+    @Min(value = 1500, message = "Construction year must be at least 1500")
+    @Max(value = 2100, message = "Construction year must be at most 2100")
     private Integer constructionYear;
+
+    @NotNull(message = "Price must not be null")
+    @Positive(message = "Price must be greater than 0")
     private BigDecimal price;
+
+    @NotNull(message = "Photo urls must not be null")
     private List<String> photoUrls;
-    private Instant createdAt;
-    private Instant lastUpdated;
-
-    public PropertyListingDto setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public PropertyListingDto setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public PropertyListingDto setAddress(String address) {
-        this.address = address;
-        return this;
-    }
-
-    public PropertyListingDto setRooms(Integer rooms) {
-        this.rooms = rooms;
-        return this;
-    }
-
-    public PropertyListingDto setBathrooms(Integer bathrooms) {
-        this.bathrooms = bathrooms;
-        return this;
-    }
-
-    public PropertyListingDto setUsableArea(BigDecimal usableArea) {
-        this.usableArea = usableArea;
-        return this;
-    }
-
-    public PropertyListingDto setConstructionYear(Integer constructionYear) {
-        this.constructionYear = constructionYear;
-        return this;
-    }
-
-    public PropertyListingDto setPrice(BigDecimal price) {
-        this.price = price;
-        return this;
-    }
-
-    public PropertyListingDto setPhotoUrls(List<String> photoUrls) {
-        this.photoUrls = photoUrls;
-        return this;
-    }
-
-    public PropertyListingDto setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public PropertyListingDto setLastUpdated(Instant lastUpdated) {
-        this.lastUpdated = lastUpdated;
-        return this;
-    }
 }

@@ -1,6 +1,8 @@
 package com.sweethome.backend.service.dto;
 
 import com.sweethome.backend.entity.HouseListing;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
@@ -9,22 +11,12 @@ import java.math.BigDecimal;
 @Getter
 @Component
 public class HouseListingDto extends PropertyListingDto {
+    @NotNull(message = "Floors must not be null")
+    @Positive(message = "Floors must be greater than 0")
     private Integer floors;
+    @NotNull(message = "Land area must not be null")
+    @Positive(message = "Land area must be greater than 0")
     private BigDecimal landArea;
+    @NotNull(message = "House type must not be null")
     private HouseListing.HouseType houseType;
-
-    public HouseListingDto setFloors(Integer floors) {
-        this.floors = floors;
-        return this;
-    }
-
-    public HouseListingDto setLandArea(BigDecimal landArea) {
-        this.landArea = landArea;
-        return this;
-    }
-
-    public HouseListingDto setHouseType(HouseListing.HouseType houseType) {
-        this.houseType = houseType;
-        return this;
-    }
 }
