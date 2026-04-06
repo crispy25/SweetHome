@@ -2,15 +2,16 @@ package com.sweethome.backend.service.mapper;
 
 import com.sweethome.backend.entity.HouseListing;
 import com.sweethome.backend.service.dto.HouseListingDto;
+import com.sweethome.backend.service.dto.HouseListingResponseDto;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HouseListingMapper extends PropertyListingMapper<HouseListing, HouseListingDto> {
+public class HouseListingMapper extends PropertyListingMapper<HouseListing, HouseListingDto, HouseListingResponseDto> {
 
     @Override
-    public HouseListingDto toDto(@NotNull HouseListing entity) {
-        final HouseListingDto dto = new HouseListingDto();
+    public HouseListingResponseDto toDto(@NotNull HouseListing entity) {
+        final HouseListingResponseDto dto = new HouseListingResponseDto();
         mapEntityToDto(entity, dto);
 
         dto.setFloors(entity.getFloors())
