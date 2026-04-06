@@ -2,7 +2,6 @@ package com.sweethome.backend.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,15 +18,13 @@ public class HouseListing extends PropertyListing {
         DUPLEX,
         TRIPLEX,
         TERRACED,
-        OTHER;
+        OTHER
     }
 
     @NotNull
-    @Positive
     @Column(name = "floors", nullable = false)
     private Integer floors;
     @NotNull
-    @Positive
     @Column(name = "land_area", nullable = false, precision = 8, scale = 2)
     private BigDecimal landArea;
     @Enumerated(EnumType.STRING)

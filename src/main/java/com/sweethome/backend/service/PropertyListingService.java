@@ -7,7 +7,9 @@ import com.sweethome.backend.entity.User;
 import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.UserRepository;
 import com.sweethome.backend.service.dto.PropertyListingDto;
+import com.sweethome.backend.service.dto.PropertyListingResponseDto;
 import com.sweethome.backend.service.mapper.PropertyListingMapper;
+import com.sweethome.backend.service.mapper.UserMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,20 +18,22 @@ import java.util.List;
 import java.util.UUID;
 
 
-public abstract class PropertyListingService<ENTITY extends PropertyListing, DTO extends PropertyListingDto> {
-    protected abstract JpaRepository<ENTITY, UUID> getRepository();
+public abstract class PropertyListingService<ENTITY extends PropertyListing, CREATE_DTO extends PropertyListingDto, RESPONSE_DTO extends PropertyListingResponseDto> {
 
-    protected abstract PropertyListingMapper<ENTITY, DTO> getMapper();
+    protected abstract JpaRepository<ENTITY, UUID> getRepository();
+    protected abstract PropertyListingMapper<ENTITY, CREATE_DTO, RESPONSE_DTO> getMapper();
 
     protected final UserRepository userRepository;
     protected final PropertyPhotoRepository photoRepository;
+    protected final UserMapper userMapper;
 
-    protected PropertyListingService(UserRepository userRepository, PropertyPhotoRepository photoRepository) {
+    protected PropertyListingService(UserRepository userRepository, PropertyPhotoRepository photoRepository,  UserMapper userMapper) {
         this.userRepository = userRepository;
         this.photoRepository = photoRepository;
+        this.userMapper = userMapper;
     }
 
-    public DTO save(DTO dto) {
+    public RESPONSE_DTO save(CREATE_DTO dto) {
         final UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final String email = user.getUsername();
         final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
@@ -43,26 +47,30 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, DTO
 
         savePhotos(dto, id);
 
-        return getMapper().toDto(saved);
+        final RESPONSE_DTO responseDto = getMapper().toDto(saved);
+
+        responseDto.setSeller(userMapper.toDto(seller));
+
+        return responseDto;
     }
 
-    public DTO getById(UUID id) {
+    public RESPONSE_DTO getById(UUID id) {
         final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
-        final DTO dto = getMapper().toDto(entity);
+        final RESPONSE_DTO dto = getMapper().toDto(entity);
         getPhotos(dto, id);
         return dto;
     }
 
-    public List<DTO> getAll() {
+    public List<RESPONSE_DTO> getAll() {
         final List<ENTITY> entities = getRepository().findAll();
         return entities.stream().map(entity -> {
-            DTO dto = getMapper().toDto(entity);
+            RESPONSE_DTO dto = getMapper().toDto(entity);
             getPhotos(dto, entity.getId());
             return dto;
         }).toList();
     }
 
-    public DTO update(UUID id, DTO dto) {
+    public RESPONSE_DTO update(UUID id, CREATE_DTO dto) {
         final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
 
         getMapper().updateEntity(entity, dto);
@@ -78,7 +86,7 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, DTO
         getRepository().deleteById(id);
     }
 
-    private void savePhotos(DTO dto, UUID propertyId) {
+    private void savePhotos(CREATE_DTO dto, UUID propertyId) {
         final List<String> photoUrls = dto.getPhotoUrls();
         if (photoUrls != null && !photoUrls.isEmpty()) {
             final List<PropertyPhoto> photos = dto.getPhotoUrls().stream()
@@ -92,7 +100,7 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, DTO
         }
     }
 
-    private void getPhotos(DTO dto, UUID propertyId) {
+    private void getPhotos(RESPONSE_DTO dto, UUID propertyId) {
         final List<String> photoUrls = photoRepository.findByIdPropertyId(propertyId).stream()
                 .map(photo -> photo.getId().getPhotoUrl())
                 .toList();

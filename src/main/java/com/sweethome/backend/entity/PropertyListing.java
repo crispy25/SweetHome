@@ -3,9 +3,8 @@ package com.sweethome.backend.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
@@ -32,28 +31,22 @@ public abstract class PropertyListing {
     private String address;
 
     @NotNull
-    @Positive
     @Column(name = "rooms", nullable = false)
     private Integer rooms;
 
     @NotNull
-    @PositiveOrZero
     @Column(name = "bathrooms", nullable = false)
     private Integer bathrooms;
 
     @NotNull
-    @Positive
     @Column(name = "usable_area", nullable = false, precision = 6, scale = 2)
     private BigDecimal usableArea;
 
     @NotNull
-    @Min(1500)
-    @Max(2100)
     @Column(name = "construction_year", nullable = false)
     private Integer constructionYear;
 
     @NotNull
-    @Positive
     @Column(name = "price", nullable = false, precision = 9, scale = 2)
     private BigDecimal price;
 
@@ -63,10 +56,12 @@ public abstract class PropertyListing {
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
+    @CreationTimestamp
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @UpdateTimestamp
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "last_updated")
     private Instant lastUpdated;
@@ -115,15 +110,4 @@ public abstract class PropertyListing {
         this.seller = seller;
         return this;
     }
-
-    public PropertyListing setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public PropertyListing setLastUpdated(Instant lastUpdated) {
-        this.lastUpdated = lastUpdated;
-        return this;
-    }
-
 }

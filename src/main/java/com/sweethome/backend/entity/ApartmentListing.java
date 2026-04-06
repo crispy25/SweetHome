@@ -18,15 +18,15 @@ public class ApartmentListing extends PropertyListing {
         DETACHED,
         SEMI_DETACHED,
         NON_DETACHED,
-        CIRCULAR;
+        CIRCULAR
     }
 
-    @NotNull
-    @Min(1)
-    @Max(4)
+    @NotNull(message = "Comfort must not be null")
+    @Min(value = 1, message = "Comfort must be at least 1")
+    @Max(value = 4, message = "Comfort must be at most 4")
     @Column(name = "comfort", nullable = false)
     private Integer comfort;
-    @NotNull
+    @NotNull(message = "Floor must not be null")
     @Column(name = "floor", nullable = false)
     private Integer floor;
     @Enumerated(EnumType.STRING)
