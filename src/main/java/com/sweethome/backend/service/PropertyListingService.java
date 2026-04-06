@@ -48,16 +48,17 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         savePhotos(dto, id);
 
         final RESPONSE_DTO responseDto = getMapper().toDto(saved);
-
         responseDto.setSeller(userMapper.toDto(seller));
+        responseDto.setPhotoUrls(getPhotos(saved.getId()));
 
         return responseDto;
     }
 
     public RESPONSE_DTO getById(UUID id) {
         final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
-        final RESPONSE_DTO dto = getMapper().toDto(entity);
-        getPhotos(dto, id);
+        RESPONSE_DTO dto = getMapper().toDto(entity);
+        dto.setSeller(userMapper.toDto(entity.getSeller()));
+        dto.setPhotoUrls(getPhotos(id));
         return dto;
     }
 
@@ -65,7 +66,8 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         final List<ENTITY> entities = getRepository().findAll();
         return entities.stream().map(entity -> {
             RESPONSE_DTO dto = getMapper().toDto(entity);
-            getPhotos(dto, entity.getId());
+            dto.setSeller(userMapper.toDto(entity.getSeller()));
+            dto.setPhotoUrls(getPhotos(entity.getId()));
             return dto;
         }).toList();
     }
@@ -74,11 +76,15 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
 
         getMapper().updateEntity(entity, dto);
-        final ENTITY updated = getRepository().save(entity);
+        getRepository().save(entity);
         photoRepository.deleteAll(photoRepository.findByIdPropertyId(id));
         savePhotos(dto, id);
 
-        return getMapper().toDto(updated);
+        final RESPONSE_DTO responseDto = getMapper().toDto(entity);
+        responseDto.setSeller(userMapper.toDto(entity.getSeller()));
+        responseDto.setPhotoUrls(getPhotos(entity.getId()));
+
+        return responseDto;
     }
 
     public void deleteById(UUID id) {
@@ -100,11 +106,10 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         }
     }
 
-    private void getPhotos(RESPONSE_DTO dto, UUID propertyId) {
-        final List<String> photoUrls = photoRepository.findByIdPropertyId(propertyId).stream()
+    private List<String> getPhotos(UUID propertyId) {
+        return photoRepository.findByIdPropertyId(propertyId).stream()
                 .map(photo -> photo.getId().getPhotoUrl())
                 .toList();
-        dto.setPhotoUrls(photoUrls);
     }
 
 }

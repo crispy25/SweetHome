@@ -1,10 +1,12 @@
 package com.sweethome.backend.service.dto;
 
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Getter
+@Component
 public class UserDto {
     private UUID id;
     private String username;
