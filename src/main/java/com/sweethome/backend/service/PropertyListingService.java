@@ -7,6 +7,7 @@ import com.sweethome.backend.entity.User;
 import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.UserRepository;
 import com.sweethome.backend.service.dto.PropertyListingDto;
+import com.sweethome.backend.service.dto.PropertyListingPatchDto;
 import com.sweethome.backend.service.dto.PropertyListingResponseDto;
 import com.sweethome.backend.service.mapper.PropertyListingMapper;
 import com.sweethome.backend.service.mapper.UserMapper;
@@ -18,10 +19,12 @@ import java.util.List;
 import java.util.UUID;
 
 
-public abstract class PropertyListingService<ENTITY extends PropertyListing, CREATE_DTO extends PropertyListingDto, RESPONSE_DTO extends PropertyListingResponseDto> {
-
+public abstract class PropertyListingService<ENTITY extends PropertyListing,
+                                            CREATE_DTO extends PropertyListingDto,
+                                            PATCH_DTO extends PropertyListingPatchDto,
+                                            RESPONSE_DTO extends PropertyListingResponseDto> {
     protected abstract JpaRepository<ENTITY, UUID> getRepository();
-    protected abstract PropertyListingMapper<ENTITY, CREATE_DTO, RESPONSE_DTO> getMapper();
+    protected abstract PropertyListingMapper<ENTITY, CREATE_DTO, PATCH_DTO, RESPONSE_DTO> getMapper();
 
     protected final UserRepository userRepository;
     protected final PropertyPhotoRepository photoRepository;
@@ -73,7 +76,6 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
 
         getMapper().updateEntity(entity, dto);
-        getRepository().save(entity);
         photoRepository.deleteAll(photoRepository.findByIdPropertyId(id));
         savePhotos(dto, id);
 

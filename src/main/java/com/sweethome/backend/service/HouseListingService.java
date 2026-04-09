@@ -5,6 +5,7 @@ import com.sweethome.backend.repository.HouseListingRepository;
 import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.UserRepository;
 import com.sweethome.backend.service.dto.HouseListingDto;
+import com.sweethome.backend.service.dto.HouseListingPatchDto;
 import com.sweethome.backend.service.dto.HouseListingResponseDto;
 import com.sweethome.backend.service.mapper.HouseListingMapper;
 import com.sweethome.backend.service.mapper.PropertyListingMapper;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class HouseListingService extends PropertyListingService<HouseListing, HouseListingDto, HouseListingResponseDto> {
+public class HouseListingService extends PropertyListingService<HouseListing, HouseListingDto, HouseListingPatchDto, HouseListingResponseDto> {
     private final HouseListingRepository houseListingRepository;
     private final HouseListingMapper houseListingMapper;
 
@@ -33,7 +34,7 @@ public class HouseListingService extends PropertyListingService<HouseListing, Ho
     }
 
     @Override
-    protected PropertyListingMapper<HouseListing, HouseListingDto, HouseListingResponseDto> getMapper() {
+    protected PropertyListingMapper<HouseListing, HouseListingDto, HouseListingPatchDto, HouseListingResponseDto> getMapper() {
         return houseListingMapper;
     }
 }

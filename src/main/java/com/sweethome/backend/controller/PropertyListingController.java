@@ -3,6 +3,7 @@ package com.sweethome.backend.controller;
 import com.sweethome.backend.entity.PropertyListing;
 import com.sweethome.backend.service.PropertyListingService;
 import com.sweethome.backend.service.dto.PropertyListingDto;
+import com.sweethome.backend.service.dto.PropertyListingPatchDto;
 import com.sweethome.backend.service.dto.PropertyListingResponseDto;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class PropertyListingController<CREATE_DTO extends PropertyListingDto, RESPONSE_DTO extends PropertyListingResponseDto> implements SecuredRestController {
+public abstract class PropertyListingController<CREATE_DTO extends PropertyListingDto,
+                                                PATCH_DTO extends PropertyListingPatchDto,
+                                                RESPONSE_DTO extends PropertyListingResponseDto> implements SecuredRestController {
 
-    protected abstract PropertyListingService<? extends PropertyListing, CREATE_DTO, RESPONSE_DTO> getService();
+    protected abstract PropertyListingService<? extends PropertyListing, CREATE_DTO, PATCH_DTO, RESPONSE_DTO> getService();
 
     private static final Logger logger = LoggerFactory.getLogger(PropertyListingController.class);
 
