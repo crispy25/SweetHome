@@ -1,0 +1,18 @@
+package com.sweethome.backend.service.dto;
+
+import com.sweethome.backend.entity.ApartmentListing;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+
+@Getter
+@Component
+public class ApartmentListingPatchDto extends PropertyListingPatchDto {
+
+    @Min(value = 1, message = "Comfort must be at least 1")
+    @Max(value = 4, message = "Comfort must be at most 4")
+    private Integer comfort;
+    private Integer floor;
+    private ApartmentListing.ApartmentLayout layout;
+}
