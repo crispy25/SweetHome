@@ -48,7 +48,7 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing,
         final ENTITY saved = getRepository().save(entity);
         final UUID id = saved.getId();
 
-        savePhotos(dto, id);
+        savePhotos(dto.getPhotoUrls(), id);
 
         final RESPONSE_DTO responseDto = getMapper().toDto(saved);
         responseDto.setPhotoUrls(getPhotos(saved.getId()));
@@ -76,8 +76,26 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing,
         final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
 
         getMapper().updateEntity(entity, dto);
+        getRepository().save(entity);
         photoRepository.deleteAll(photoRepository.findByIdPropertyId(id));
-        savePhotos(dto, id);
+        savePhotos(dto.getPhotoUrls(), id);
+
+        final RESPONSE_DTO responseDto = getMapper().toDto(entity);
+        responseDto.setPhotoUrls(getPhotos(entity.getId()));
+
+        return responseDto;
+    }
+
+    public RESPONSE_DTO patch(UUID id, PATCH_DTO dto) {
+        final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
+
+        getMapper().patchEntity(entity, dto);
+        getRepository().save(entity);
+
+        if (dto.getPhotoUrls() != null) {
+            photoRepository.deleteAll(photoRepository.findByIdPropertyId(id));
+            savePhotos(dto.getPhotoUrls(), id);
+        }
 
         final RESPONSE_DTO responseDto = getMapper().toDto(entity);
         responseDto.setPhotoUrls(getPhotos(entity.getId()));
@@ -90,10 +108,9 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing,
         getRepository().deleteById(id);
     }
 
-    private void savePhotos(CREATE_DTO dto, UUID propertyId) {
-        final List<String> photoUrls = dto.getPhotoUrls();
+    private void savePhotos(List<String> photoUrls, UUID propertyId) {
         if (photoUrls != null && !photoUrls.isEmpty()) {
-            final List<PropertyPhoto> photos = dto.getPhotoUrls().stream()
+            final List<PropertyPhoto> photos = photoUrls.stream()
                     .map(url -> {
                         PropertyPhoto p = new PropertyPhoto();
                         p.setId(new PropertyPhotoId(propertyId, url));

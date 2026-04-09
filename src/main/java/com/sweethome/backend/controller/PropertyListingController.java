@@ -66,6 +66,17 @@ public abstract class PropertyListingController<CREATE_DTO extends PropertyListi
         return ResponseEntity.ok(updated);
     }
 
+    @PatchMapping("/patch/{id}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    public ResponseEntity<RESPONSE_DTO> patch(@PathVariable UUID id, @Valid @RequestBody PATCH_DTO dto) {
+        logger.info("Request to patch property listing with id: {} and payload: {}", id, dto);
+
+        RESPONSE_DTO updated = getService().patch(id, dto);
+
+        logger.info("Successfully patched property listing with id: {}", id);
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/remove/{id}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
