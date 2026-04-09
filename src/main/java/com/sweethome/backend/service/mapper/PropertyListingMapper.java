@@ -10,30 +10,5 @@ public abstract class PropertyListingMapper<ENTITY extends PropertyListing, CREA
 
     public abstract ENTITY toEntity(@NotNull CREATE_DTO dto);
 
-    public abstract ENTITY updateEntity(@NotNull ENTITY entity, @NotNull CREATE_DTO dto);
-
-    protected void mapEntityToDto(ENTITY entity, RESPONSE_DTO dto) {
-        dto.setTitle(entity.getTitle())
-                .setDescription(entity.getDescription())
-                .setAddress(entity.getAddress())
-                .setRooms(entity.getRooms())
-                .setBathrooms(entity.getBathrooms())
-                .setConstructionYear(entity.getConstructionYear())
-                .setUsableArea(entity.getUsableArea())
-                .setPrice(entity.getPrice())
-                .setId(entity.getId())
-                .setCreatedAt(entity.getCreatedAt())
-                .setLastUpdated(entity.getLastUpdated());
-    }
-
-    protected void mapDtoToEntity(CREATE_DTO dto, ENTITY entity) {
-        entity.setTitle(dto.getTitle())
-                .setDescription(dto.getDescription())
-                .setAddress(dto.getAddress())
-                .setRooms(dto.getRooms())
-                .setBathrooms(dto.getBathrooms())
-                .setConstructionYear(dto.getConstructionYear())
-                .setUsableArea(dto.getUsableArea())
-                .setPrice(dto.getPrice());
-    }
+    public abstract void updateEntity(@NotNull ENTITY entity, @NotNull CREATE_DTO dto);
 }

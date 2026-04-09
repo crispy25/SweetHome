@@ -48,7 +48,6 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         savePhotos(dto, id);
 
         final RESPONSE_DTO responseDto = getMapper().toDto(saved);
-        responseDto.setSeller(userMapper.toDto(seller));
         responseDto.setPhotoUrls(getPhotos(saved.getId()));
 
         return responseDto;
@@ -57,7 +56,6 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
     public RESPONSE_DTO getById(UUID id) {
         final ENTITY entity = getRepository().findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
         RESPONSE_DTO dto = getMapper().toDto(entity);
-        dto.setSeller(userMapper.toDto(entity.getSeller()));
         dto.setPhotoUrls(getPhotos(id));
         return dto;
     }
@@ -66,7 +64,6 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         final List<ENTITY> entities = getRepository().findAll();
         return entities.stream().map(entity -> {
             RESPONSE_DTO dto = getMapper().toDto(entity);
-            dto.setSeller(userMapper.toDto(entity.getSeller()));
             dto.setPhotoUrls(getPhotos(entity.getId()));
             return dto;
         }).toList();
@@ -81,7 +78,6 @@ public abstract class PropertyListingService<ENTITY extends PropertyListing, CRE
         savePhotos(dto, id);
 
         final RESPONSE_DTO responseDto = getMapper().toDto(entity);
-        responseDto.setSeller(userMapper.toDto(entity.getSeller()));
         responseDto.setPhotoUrls(getPhotos(entity.getId()));
 
         return responseDto;

@@ -4,37 +4,16 @@ import com.sweethome.backend.entity.HouseListing;
 import com.sweethome.backend.service.dto.HouseListingDto;
 import com.sweethome.backend.service.dto.HouseListingResponseDto;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 
-@Component
-public class HouseListingMapper extends PropertyListingMapper<HouseListing, HouseListingDto, HouseListingResponseDto> {
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public abstract class HouseListingMapper extends PropertyListingMapper<HouseListing, HouseListingDto, HouseListingResponseDto> {
 
-    @Override
-    public HouseListingResponseDto toDto(@NotNull HouseListing entity) {
-        final HouseListingResponseDto dto = new HouseListingResponseDto();
-        mapEntityToDto(entity, dto);
+    public abstract HouseListingResponseDto toDto(@NotNull HouseListing entity);
 
-        dto.setFloors(entity.getFloors())
-                .setLandArea(entity.getLandArea())
-                .setHouseType(entity.getHouseType());
+    public abstract HouseListing toEntity(@NotNull HouseListingDto dto);
 
-        return dto;
-    }
-
-    @Override
-    public HouseListing toEntity(@NotNull HouseListingDto dto) {
-        final HouseListing entity = new HouseListing();
-        return updateEntity(entity, dto);
-    }
-
-    @Override
-    public HouseListing updateEntity(HouseListing houseListing, HouseListingDto dto) {
-        mapDtoToEntity(dto, houseListing);
-
-        houseListing.setFloors(dto.getFloors())
-                .setLandArea(dto.getLandArea())
-                .setHouseType(dto.getHouseType());
-
-        return houseListing;
-    }
+    public abstract void updateEntity(@MappingTarget HouseListing houseListing, HouseListingDto dto);
 }
