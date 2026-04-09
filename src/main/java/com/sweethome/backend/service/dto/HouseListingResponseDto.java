@@ -1,11 +1,13 @@
 package com.sweethome.backend.service.dto;
 
 import com.sweethome.backend.entity.HouseListing;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Getter
 @Setter
 @Component
 public class HouseListingResponseDto extends PropertyListingResponseDto {
