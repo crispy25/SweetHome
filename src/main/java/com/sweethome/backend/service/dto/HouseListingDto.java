@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Component
 public class HouseListingDto extends PropertyListingDto {
+
     @NotNull(message = "Floors must not be null")
     @Positive(message = "Floors must be greater than 0")
     private Integer floors;

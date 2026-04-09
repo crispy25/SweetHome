@@ -3,17 +3,11 @@ package com.sweethome.backend.service.mapper;
 import com.sweethome.backend.entity.User;
 import com.sweethome.backend.service.dto.UserDto;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 
-@Component
-public class UserMapper {
-    public UserDto toDto(@NotNull User entity) {
-        final UserDto dto = new UserDto();
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public abstract class UserMapper {
 
-        dto.setId(entity.getId())
-                .setUsername(entity.getUsername())
-                .setEmail(entity.getEmail());
-
-        return dto;
-    }
+    public abstract UserDto toDto(@NotNull User entity);
 }
