@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.entity.HouseListing;
+import com.sweethome.backend.constants.HouseType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Component
-public class HouseListingDto extends PropertyListingDto {
+public class HouseDto extends PropertyDto {
 
     @Schema(example = "2")
     @NotNull(message = "Floors must not be null")
@@ -23,5 +23,5 @@ public class HouseListingDto extends PropertyListingDto {
     private BigDecimal landArea;
     @Schema(example = "DETACHED")
     @NotNull(message = "House type must not be null")
-    private HouseListing.HouseType houseType;
+    private HouseType houseType;
 }

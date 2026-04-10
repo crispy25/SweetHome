@@ -1,8 +1,11 @@
 package com.sweethome.backend.entity;
 
+import com.sweethome.backend.constants.PropertyType;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import java.math.BigDecimal;
@@ -10,8 +13,12 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Getter
-@MappedSuperclass
-public abstract class PropertyListing {
+@Setter
+@Entity
+@Table(name = "properties", schema = "project")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Property {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -56,6 +63,10 @@ public abstract class PropertyListing {
     @JoinColumn(name = "seller_id", nullable = false)
     private User seller;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "property_type")
+    private PropertyType propertyType;
+
     @CreationTimestamp
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
@@ -65,49 +76,4 @@ public abstract class PropertyListing {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "last_updated")
     private Instant lastUpdated;
-
-    public PropertyListing setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public PropertyListing setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public PropertyListing setAddress(String address) {
-        this.address = address;
-        return this;
-    }
-
-    public PropertyListing setRooms(Integer rooms) {
-        this.rooms = rooms;
-        return this;
-    }
-
-    public PropertyListing setBathrooms(Integer bathrooms) {
-        this.bathrooms = bathrooms;
-        return this;
-    }
-
-    public PropertyListing setUsableArea(BigDecimal usableArea) {
-        this.usableArea = usableArea;
-        return this;
-    }
-
-    public PropertyListing setConstructionYear(Integer constructionYear) {
-        this.constructionYear = constructionYear;
-        return this;
-    }
-
-    public PropertyListing setPrice(BigDecimal price) {
-        this.price = price;
-        return this;
-    }
-
-    public PropertyListing setSeller(User seller) {
-        this.seller = seller;
-        return this;
-    }
 }

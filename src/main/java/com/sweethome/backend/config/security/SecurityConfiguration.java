@@ -36,7 +36,7 @@ public class SecurityConfiguration {
            http.authorizeHttpRequests(auth -> auth
                    .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register",
                            "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
-                           "/api/v1/apartments/get**", "/api/v1/houses/get/**").permitAll()
+                           "/api/v1/properties/get**", "/api/v1/properties/get/**").permitAll()
                    .anyRequest().authenticated())
                    .exceptionHandling((exception)-> exception.authenticationEntryPoint(authEntryPoint))
                    .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

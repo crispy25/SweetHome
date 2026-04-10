@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.entity.HouseListing;
+import com.sweethome.backend.constants.HouseType;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Component
-public class HouseListingResponseDto extends PropertyListingResponseDto {
+public class HouseResponseDto extends PropertyResponseDto {
 
     private Integer floors;
     private BigDecimal landArea;
-    private HouseListing.HouseType houseType;
+    private HouseType houseType;
 }

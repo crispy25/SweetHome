@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.entity.HouseListing;
+import com.sweethome.backend.constants.HouseType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Component
-public class HouseListingPatchDto extends PropertyListingPatchDto {
+public class HousePatchDto extends PropertyPatchDto {
 
     @Schema(example = "2")
     @Positive(message = "Floors must be greater than 0")
@@ -19,5 +19,5 @@ public class HouseListingPatchDto extends PropertyListingPatchDto {
     @Positive(message = "Land area must be greater than 0")
     private BigDecimal landArea;
     @Schema(example = "DETACHED")
-    private HouseListing.HouseType houseType;
+    private HouseType houseType;
 }

@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.entity.ApartmentListing;
+import com.sweethome.backend.constants.ApartmentLayout;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class ApartmentListingDto extends PropertyListingDto {
+public class ApartmentDto extends PropertyDto {
 
     @Schema(example = "1")
     @NotNull(message = "Comfort must not be null")
@@ -22,5 +22,5 @@ public class ApartmentListingDto extends PropertyListingDto {
     private Integer floor;
     @Schema(example = "SEMI_DETACHED")
     @NotNull(message = "Apartment layout must not be null")
-    private ApartmentListing.ApartmentLayout layout;
+    private ApartmentLayout layout;
 }

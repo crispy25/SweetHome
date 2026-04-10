@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
-public abstract class PropertyListingPatchDto {
+public abstract class PropertyPatchDto {
 
     @Schema(example = "Property for sale!")
     @Pattern(regexp = "^\\S.*\\S$", message = "No leading or trailing white spaces")

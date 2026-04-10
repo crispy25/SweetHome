@@ -1,16 +1,15 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.entity.ApartmentListing;
+import com.sweethome.backend.constants.ApartmentLayout;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class ApartmentListingPatchDto extends PropertyListingPatchDto {
+public class ApartmentPatchDto extends PropertyPatchDto {
 
     @Schema(example = "1")
     @Min(value = 1, message = "Comfort must be at least 1")
@@ -19,5 +18,5 @@ public class ApartmentListingPatchDto extends PropertyListingPatchDto {
     @Schema(example = "2")
     private Integer floor;
     @Schema(example = "SEMI_DETACHED")
-    private ApartmentListing.ApartmentLayout layout;
+    private ApartmentLayout layout;
 }

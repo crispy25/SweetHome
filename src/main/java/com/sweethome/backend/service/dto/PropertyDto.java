@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
-public abstract class PropertyListingDto {
+public abstract class PropertyDto {
 
     @Schema(example = "Property for sale!")
     @NotBlank
