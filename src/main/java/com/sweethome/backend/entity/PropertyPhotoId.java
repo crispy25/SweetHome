@@ -41,5 +41,4 @@ public class PropertyPhotoId implements Serializable {
     public int hashCode() {
         return Objects.hash(photoUrl, propertyId);
     }
-
 }

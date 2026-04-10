@@ -17,5 +17,4 @@ import lombok.Setter;
 public class PropertyPhoto {
     @EmbeddedId
     private PropertyPhotoId id;
-
 }
