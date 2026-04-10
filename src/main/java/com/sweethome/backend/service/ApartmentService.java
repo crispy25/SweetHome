@@ -1,6 +1,7 @@
 package com.sweethome.backend.service;
 
 import com.sweethome.backend.entity.*;
+import com.sweethome.backend.exception.ResourceNotFoundException;
 import com.sweethome.backend.repository.ApartmentRepository;
 import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.UserRepository;
@@ -34,7 +35,7 @@ public class ApartmentService extends AbstractPropertyService {
     public ApartmentResponseDto save(ApartmentDto dto) {
         final UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final String email = user.getUsername();
-        final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "email",  email));
 
         final Apartment entity = apartmentMapper.toEntity(dto);
 
@@ -52,7 +53,7 @@ public class ApartmentService extends AbstractPropertyService {
     }
 
     public ApartmentResponseDto update(UUID id, ApartmentDto dto) {
-        final Apartment entity = apartmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Apartment not found"));
+        final Apartment entity = apartmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Apartment",  "id", id));
 
         apartmentMapper.updateEntity(entity, dto);
 
@@ -68,7 +69,7 @@ public class ApartmentService extends AbstractPropertyService {
     }
 
     public ApartmentResponseDto patch(UUID id, ApartmentPatchDto dto) {
-        final Apartment entity = apartmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Apartment not found"));
+        final Apartment entity = apartmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Apartment",  "id", id));
 
         apartmentMapper.patchEntity(entity, dto);
 

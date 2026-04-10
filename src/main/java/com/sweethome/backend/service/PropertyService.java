@@ -1,6 +1,7 @@
 package com.sweethome.backend.service;
 
 import com.sweethome.backend.entity.*;
+import com.sweethome.backend.exception.ResourceNotFoundException;
 import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.PropertyRepository;
 import com.sweethome.backend.service.dto.PropertyResponseDto;
@@ -26,7 +27,7 @@ public class PropertyService extends AbstractPropertyService {
     }
 
     public PropertyResponseDto getById(UUID id) {
-        final Property entity = propertyRepository.findById(id).orElseThrow(() -> new RuntimeException("Property not found"));
+        final Property entity = propertyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Property", "id", id));
         PropertyResponseDto dto = propertyMapper.toDto(entity);
         dto.setPhotoUrls(getPhotos(id));
         return dto;

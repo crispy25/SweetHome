@@ -1,6 +1,7 @@
 package com.sweethome.backend.service;
 
 import com.sweethome.backend.entity.*;
+import com.sweethome.backend.exception.ResourceNotFoundException;
 import com.sweethome.backend.repository.HouseRepository;
 import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.UserRepository;
@@ -32,7 +33,7 @@ public class HouseService extends AbstractPropertyService {
     public HouseResponseDto save(HouseDto dto) {
         final UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final String email = user.getUsername();
-        final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User",  "email", email));
 
         final House entity = houseMapper.toEntity(dto);
 
@@ -50,7 +51,7 @@ public class HouseService extends AbstractPropertyService {
     }
 
     public HouseResponseDto update(UUID id, HouseDto dto) {
-        final House entity = houseRepository.findById(id).orElseThrow(() -> new RuntimeException("House not found"));
+        final House entity = houseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("House",  "id", id));
 
         houseMapper.updateEntity(entity, dto);
 
@@ -66,7 +67,7 @@ public class HouseService extends AbstractPropertyService {
     }
 
     public HouseResponseDto patch(UUID id, HousePatchDto dto) {
-        final House entity = houseRepository.findById(id).orElseThrow(() -> new RuntimeException("House not found"));
+        final House entity = houseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("House",  "id", id));
 
         houseMapper.patchEntity(entity, dto);
 

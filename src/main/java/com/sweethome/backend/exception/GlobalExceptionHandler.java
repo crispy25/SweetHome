@@ -3,12 +3,15 @@ package com.sweethome.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -41,11 +44,8 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException ex,
             WebRequest request
     ) {
-        String errorMessage = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .collect(Collectors.joining(", "));
+        FieldError fieldError = ex.getBindingResult().getFieldErrors().get(0);
+        String errorMessage = fieldError.getField() + ": " + fieldError.getDefaultMessage();
 
         ErrorObject errorObject = new ErrorObject()
                 .setStatusCode(HttpStatus.BAD_REQUEST.value())
@@ -55,4 +55,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorObject, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorObject> handleNotFound(ResourceNotFoundException ex) {
+
+        ErrorObject errorObject = new ErrorObject()
+                .setStatusCode(HttpStatus.NOT_FOUND.value())
+                .setMessage(ex.getMessage())
+                .setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+    }
 }
