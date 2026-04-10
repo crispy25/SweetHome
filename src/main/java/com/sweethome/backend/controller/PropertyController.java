@@ -44,7 +44,7 @@ public class PropertyController implements SecuredRestController {
     }
 
     @DeleteMapping("/remove/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    @PreAuthorize("@propertyAuthorization.canModifyProperty(#id)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         logger.info("Request to delete property listing with id: {}", id);
 

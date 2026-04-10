@@ -35,7 +35,7 @@ public class HouseController implements SecuredRestController {
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    @PreAuthorize("@propertyAuthorization.canModifyProperty(#id)")
     public ResponseEntity<PropertyResponseDto> update(@PathVariable UUID id, @Valid @RequestBody HouseDto dto) {
         logger.info("Request to update property listing with id: {} and payload: {}", id, dto);
 
@@ -46,7 +46,7 @@ public class HouseController implements SecuredRestController {
     }
 
     @PatchMapping("/patch/{id}")
-    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    @PreAuthorize("@propertyAuthorization.canModifyProperty(#id)")
     public ResponseEntity<PropertyResponseDto> patch(@PathVariable UUID id, @Valid @RequestBody HousePatchDto dto) {
         logger.info("Request to patch property listing with id: {} and payload: {}", id, dto);
 
