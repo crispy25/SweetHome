@@ -1,8 +1,9 @@
 package com.sweethome.backend.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
@@ -12,6 +13,8 @@ import java.time.Instant;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "favorites", schema = "project")
 public class Favorite {
@@ -30,7 +33,6 @@ public class Favorite {
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
 
-    @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
