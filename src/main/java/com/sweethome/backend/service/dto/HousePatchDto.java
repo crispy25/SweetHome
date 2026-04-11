@@ -4,12 +4,10 @@ import com.sweethome.backend.constants.HouseType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @Getter
-@Component
 public class HousePatchDto extends PropertyPatchDto {
 
     @Schema(example = "2")

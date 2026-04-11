@@ -67,13 +67,11 @@ public abstract class Property {
     @Column(name = "property_type")
     private PropertyType propertyType;
 
-    @NotNull
     @CreationTimestamp
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @NotNull
     @UpdateTimestamp
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "last_updated")

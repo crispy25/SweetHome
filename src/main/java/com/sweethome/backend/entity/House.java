@@ -2,6 +2,8 @@ package com.sweethome.backend.entity;
 
 import com.sweethome.backend.constants.HouseType;
 import com.sweethome.backend.constants.PropertyType;
+import com.sweethome.backend.service.dto.PropertyResponseDto;
+import com.sweethome.backend.service.mapper.PropertyMapper;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

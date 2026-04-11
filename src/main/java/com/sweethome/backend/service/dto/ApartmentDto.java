@@ -6,10 +6,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 @Getter
-@Component
 public class ApartmentDto extends PropertyDto {
 
     @Schema(example = "1")

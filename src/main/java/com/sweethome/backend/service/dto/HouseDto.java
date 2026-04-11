@@ -5,12 +5,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 @Getter
-@Component
 public class HouseDto extends PropertyDto {
 
     @Schema(example = "2")

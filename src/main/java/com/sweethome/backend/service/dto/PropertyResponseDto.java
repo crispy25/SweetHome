@@ -16,9 +16,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class PropertyResponseDto {
+public class PropertyResponseDto {
 
-    @Getter
     private UUID id;
     private String title;
     private String description;
