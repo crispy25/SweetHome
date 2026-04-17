@@ -54,7 +54,7 @@ public class AuthController {
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
-    @SecurityRequirement(name = "Bearer Authentication")
+    @SecurityRequirement(name = "bearerAuth")
     @RequestMapping(path ="/token", method = RequestMethod.GET)
     public ResponseEntity<?> validateToken() {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
