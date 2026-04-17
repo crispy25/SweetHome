@@ -1,5 +1,7 @@
 package com.sweethome.backend.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sweethome.backend.exception.ErrorObject;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,9 +15,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    @Autowired
+    private ObjectMapper mapper;
     @Autowired
     private JwtGenerator tokenGenerator;
     @Autowired
@@ -26,15 +31,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
-        if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
-            String username = tokenGenerator.getUsernameFromJWT(token);
+        if (StringUtils.hasText(token)) {
+            if (!tokenGenerator.validateToken(token)) {
+                ErrorObject error = new ErrorObject()
+                        .setStatusCode(HttpServletResponse.SC_UNAUTHORIZED)
+                        .setMessage("JWT is expired or invalid")
+                        .setTimestamp(LocalDateTime.now());
 
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+
+                mapper.writeValue(response.getWriter(), error);
+                return;
+            }
+
+            String username = tokenGenerator.getUsernameFromJWT(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,
-                    userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+            authenticationToken.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
+
         filterChain.doFilter(request, response);
     }
 
