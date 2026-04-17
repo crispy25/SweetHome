@@ -1,9 +1,11 @@
 package com.sweethome.backend.controller;
 
 import com.sweethome.backend.service.AuthService;
+import com.sweethome.backend.service.UserService;
 import com.sweethome.backend.service.dto.LoginDto;
 import com.sweethome.backend.service.dto.LoginResponseDto;
 import com.sweethome.backend.service.dto.RegisterDto;
+import com.sweethome.backend.service.mapper.UserMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,12 @@ public class AuthController {
     private AuthService authService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private LoginResponseDto loginResponseDto;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -41,8 +49,9 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         logger.info("Request to login for user {}", loginDto.getEmail());
         String token = authService.login(loginDto);
+        loginResponseDto.setToken(token).setUser(userMapper.toDto(userService.getCurrentUser()));
         logger.info("Successfully logged in user {}", loginDto.getEmail());
-        return new ResponseEntity<>(loginResponseDto.setToken(token), HttpStatus.OK);
+        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
     @SecurityRequirement(name = "Bearer Authentication")

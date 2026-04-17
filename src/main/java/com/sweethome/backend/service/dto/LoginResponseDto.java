@@ -7,13 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginResponseDto {
 
-    @JsonProperty("access_token")
+    @JsonProperty("token")
     private String token;
     @JsonProperty("token_type")
     private String type = "Bearer";
     @JsonProperty("expires_in")
     @Value("${token.ttl}")
     private long expire;
+    @JsonProperty("user")
+    private UserDto user;
 
     public String getToken() {
         return token;
@@ -39,6 +41,11 @@ public class LoginResponseDto {
 
     public LoginResponseDto setExpire(long expire) {
         this.expire = expire;
+        return this;
+    }
+
+    public LoginResponseDto setUser(UserDto user) {
+        this.user = user;
         return this;
     }
 }
