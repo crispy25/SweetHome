@@ -9,5 +9,5 @@ import java.util.UUID;
 
 
 public interface FavoriteRepository extends JpaRepository<Favorite, FavoriteId> {
-    List<Favorite> findByUser_Id(UUID userId);
+    List<Favorite> findByUserId(UUID userId);
 }

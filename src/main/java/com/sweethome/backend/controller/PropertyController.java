@@ -23,7 +23,7 @@ public class PropertyController implements SecuredRestController {
         this.propertyService = propertyService;
     }
 
-    @GetMapping(path = "/get/{id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<PropertyResponseDto> getById(@PathVariable UUID id) {
         logger.info("Request to get property listing with id: {}", id);
 
@@ -33,7 +33,7 @@ public class PropertyController implements SecuredRestController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping(path = "/get")
+    @GetMapping
     public ResponseEntity<List<PropertyResponseDto>> getAll() {
         logger.info("Request to get all property listings");
 
@@ -43,7 +43,7 @@ public class PropertyController implements SecuredRestController {
         return ResponseEntity.ok(list);
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("@propertyAuthorization.canModifyProperty(#id)")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         logger.info("Request to delete property listing with id: {}", id);

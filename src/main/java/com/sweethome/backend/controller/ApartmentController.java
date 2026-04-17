@@ -3,7 +3,6 @@ package com.sweethome.backend.controller;
 import com.sweethome.backend.service.ApartmentService;
 import com.sweethome.backend.service.dto.ApartmentDto;
 import com.sweethome.backend.service.dto.ApartmentPatchDto;
-import com.sweethome.backend.service.dto.ApartmentResponseDto;
 import com.sweethome.backend.service.dto.PropertyResponseDto;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class ApartmentController implements SecuredRestController {
         this.apartmentService = apartmentService;
     }
 
-    @PostMapping(path = "/add")
+    @PostMapping
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<PropertyResponseDto> create(@Valid @RequestBody ApartmentDto dto) {
         logger.info("Request to create property listing: {}", dto);
@@ -39,7 +38,7 @@ public class ApartmentController implements SecuredRestController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("@propertyAuthorization.canModifyProperty(#id)")
     public ResponseEntity<PropertyResponseDto> update(@PathVariable UUID id, @Valid @RequestBody ApartmentDto dto) {
         logger.info("Request to update property listing with id: {} and payload: {}", id, dto);
@@ -50,7 +49,7 @@ public class ApartmentController implements SecuredRestController {
         return ResponseEntity.ok(updated);
     }
 
-    @PatchMapping("/patch/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("@propertyAuthorization.canModifyProperty(#id)")
     public ResponseEntity<PropertyResponseDto> patch(@PathVariable UUID id, @Valid @RequestBody ApartmentPatchDto dto) {
         logger.info("Request to patch property listing with id: {} and payload: {}", id, dto);

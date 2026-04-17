@@ -64,7 +64,7 @@ public class FavoriteService {
     }
 
     public List<FavoriteResponseDto> getAll() {
-        return favoriteRepository.findByUser_Id(userService.getCurrentUserId())
+        return favoriteRepository.findByUserId(userService.getCurrentUserId())
                 .stream()
                 .map(favorite -> {
                     FavoriteResponseDto dto = favoriteMapper.toDto(favorite);
