@@ -11,14 +11,14 @@ import lombok.Getter;
 public class ApartmentDto extends PropertyDto {
 
     @Schema(example = "1")
-    @NotNull(message = "Comfort must not be null")
-    @Min(value = 1, message = "Comfort must be at least 1")
-    @Max(value = 4, message = "Comfort must be at most 4")
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 4)
     private Integer comfort;
     @Schema(example = "2")
-    @NotNull(message = "Floor must not be null")
+    @NotNull
     private Integer floor;
     @Schema(example = "SEMI_DETACHED")
-    @NotNull(message = "Apartment layout must not be null")
+    @NotNull
     private ApartmentLayout layout;
 }

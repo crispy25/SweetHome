@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 public class HousePatchDto extends PropertyPatchDto {
 
     @Schema(example = "2")
-    @Positive(message = "Floors must be greater than 0")
+    @Positive
     private Integer floors;
     @Schema(example = "500.0")
-    @Positive(message = "Land area must be greater than 0")
+    @Positive
     private BigDecimal landArea;
     @Schema(example = "DETACHED")
     private HouseType houseType;

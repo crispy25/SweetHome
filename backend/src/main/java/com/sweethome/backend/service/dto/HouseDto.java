@@ -12,14 +12,14 @@ import java.math.BigDecimal;
 public class HouseDto extends PropertyDto {
 
     @Schema(example = "2")
-    @NotNull(message = "Floors must not be null")
-    @Positive(message = "Floors must be greater than 0")
+    @NotNull
+    @Positive
     private Integer floors;
     @Schema(example = "500.0")
-    @NotNull(message = "Land area must not be null")
-    @Positive(message = "Land area must be greater than 0")
+    @NotNull
+    @Positive
     private BigDecimal landArea;
     @Schema(example = "DETACHED")
-    @NotNull(message = "House type must not be null")
+    @NotNull
     private HouseType houseType;
 }

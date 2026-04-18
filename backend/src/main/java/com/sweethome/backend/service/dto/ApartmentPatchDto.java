@@ -10,8 +10,8 @@ import lombok.Getter;
 public class ApartmentPatchDto extends PropertyPatchDto {
 
     @Schema(example = "1")
-    @Min(value = 1, message = "Comfort must be at least 1")
-    @Max(value = 4, message = "Comfort must be at most 4")
+    @Min(value = 1)
+    @Max(value = 4)
     private Integer comfort;
     @Schema(example = "2")
     private Integer floor;
