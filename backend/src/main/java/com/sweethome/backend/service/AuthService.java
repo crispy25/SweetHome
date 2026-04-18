@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +51,7 @@ public class AuthService {
                 .setEmail(registerDto.getEmail())
                 .setPassword(passwordEncoder.encode(registerDto.getPassword()))
                 .setUsername(registerDto.getUsername())
+                .setPhoneNumber(registerDto.getPhoneNumber())
                 .setRoles(roleList));
     }
 
@@ -67,6 +67,5 @@ public class AuthService {
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtGenerator.generateToken(authentication);
-
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class RegisterDto {
     @Email
     private String email;
+    private String phoneNumber;
     @NotBlank
     private String username;
     @NotBlank
@@ -17,6 +18,11 @@ public class RegisterDto {
 
     public RegisterDto setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public RegisterDto setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
         return this;
     }
 

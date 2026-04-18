@@ -7,7 +7,7 @@ import com.sweethome.backend.service.dto.ApartmentResponseDto;
 import jakarta.validation.constraints.NotNull;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = RoleMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ApartmentMapper {
 
     public abstract ApartmentResponseDto toDto(@NotNull Apartment entity);

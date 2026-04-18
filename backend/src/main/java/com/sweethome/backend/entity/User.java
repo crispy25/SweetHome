@@ -1,16 +1,6 @@
 package com.sweethome.backend.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +17,8 @@ public class User {
     private String username;
     @Column(name = "email")
     private String email;
+    @Column(name = "phone_number")
+    private String phoneNumber;
     @Column(name = "password")
     private String password;
 
@@ -59,6 +51,15 @@ public class User {
 
     public User setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public User setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
         return this;
     }
 
