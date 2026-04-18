@@ -3,7 +3,6 @@ package com.sweethome.backend.service;
 import com.sweethome.backend.constants.PropertySortByType;
 import com.sweethome.backend.entity.Property;
 import com.sweethome.backend.exception.ResourceNotFoundException;
-import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.PropertyRepository;
 import com.sweethome.backend.service.dto.PropertyResponseDto;
 import com.sweethome.backend.service.dto.PropertySearchDto;
@@ -22,49 +21,36 @@ import java.util.UUID;
 
 @Service
 @Transactional
-public class PropertyService extends AbstractPropertyService {
+public class PropertyService {
 
     private static final int DEFAULT_PAGE_SIZE = 10;
 
     private final PropertyRepository propertyRepository;
     private final PropertyMapper propertyMapper;
 
-    public PropertyService(PropertyRepository propertyRepository, PropertyPhotoRepository photoRepository, PropertyMapper propertyMapper) {
-        super(photoRepository);
-
+    public PropertyService(PropertyRepository propertyRepository, PropertyMapper propertyMapper) {
         this.propertyRepository = propertyRepository;
         this.propertyMapper = propertyMapper;
     }
 
     public PropertyResponseDto getById(UUID id) {
         final Property entity = propertyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Property", "id", id));
-        PropertyResponseDto dto = propertyMapper.toDto(entity);
-        dto.setPhotoUrls(getPhotos(id));
-        return dto;
+        return propertyMapper.toDto(entity);
     }
 
     public List<PropertyResponseDto> getAll() {
         final List<Property> entities = propertyRepository.findAll();
-        return entities.stream().map(entity -> {
-            PropertyResponseDto dto = propertyMapper.toDto(entity);
-            dto.setPhotoUrls(getPhotos(entity.getId()));
-            return dto;
-        }).toList();
+        return entities.stream().map(propertyMapper::toDto).toList();
     }
 
     public Page<PropertyResponseDto> search(PropertySearchDto req) {
         final Pageable pageable = toPageable(req);
         final Specification<Property> spec = PropertySpecification.toSpecification(req);
         final Page<Property> page = propertyRepository.findAll(spec, pageable);
-        return page.map(entity -> {
-            PropertyResponseDto dto = propertyMapper.toDto(entity);
-            dto.setPhotoUrls(getPhotos(entity.getId()));
-            return dto;
-        });
+        return page.map(propertyMapper::toDto);
     }
 
     public void deleteById(UUID id) {
-        photoRepository.deleteAll(photoRepository.findByIdPropertyId(id));
         propertyRepository.deleteById(id);
     }
 

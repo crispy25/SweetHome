@@ -1,9 +1,9 @@
 package com.sweethome.backend.service;
 
-import com.sweethome.backend.entity.*;
+import com.sweethome.backend.entity.Apartment;
+import com.sweethome.backend.entity.User;
 import com.sweethome.backend.exception.ResourceNotFoundException;
 import com.sweethome.backend.repository.ApartmentRepository;
-import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.UserRepository;
 import com.sweethome.backend.service.dto.ApartmentDto;
 import com.sweethome.backend.service.dto.ApartmentPatchDto;
@@ -14,19 +14,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.UUID;
 
 @Service
 @Transactional
-public class ApartmentService extends AbstractPropertyService {
+public class ApartmentService {
 
     private final ApartmentRepository apartmentRepository;
     private final UserRepository userRepository;
     private final ApartmentMapper apartmentMapper;
 
-    public ApartmentService(ApartmentRepository apartmentRepository, UserRepository userRepository, PropertyPhotoRepository photoRepository, ApartmentMapper apartmentMapper) {
-        super(photoRepository);
-
+    public ApartmentService(ApartmentRepository apartmentRepository, UserRepository userRepository, ApartmentMapper apartmentMapper) {
         this.apartmentRepository = apartmentRepository;
         this.userRepository = userRepository;
         this.apartmentMapper = apartmentMapper;
@@ -38,51 +37,33 @@ public class ApartmentService extends AbstractPropertyService {
         final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "email",  email));
 
         final Apartment entity = apartmentMapper.toEntity(dto);
-
         entity.setSeller(seller);
 
         final Apartment saved = apartmentRepository.saveAndFlush(entity);
-        final UUID id = saved.getId();
 
-        savePhotos(dto.getPhotoUrls(), id);
-
-        final ApartmentResponseDto responseDto = apartmentMapper.toDto(saved);
-        responseDto.setPhotoUrls(getPhotos(saved.getId()));
-
-        return responseDto;
+        return apartmentMapper.toDto(saved);
     }
 
     public ApartmentResponseDto update(UUID id, ApartmentDto dto) {
         final Apartment entity = apartmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Apartment",  "id", id));
 
         apartmentMapper.updateEntity(entity, dto);
+        entity.setPhotoUrls(new HashSet<>(dto.getPhotoUrls()));
 
         final Apartment saved = apartmentRepository.saveAndFlush(entity);
 
-        photoRepository.deleteAll(photoRepository.findByIdPropertyId(id));
-        savePhotos(dto.getPhotoUrls(), id);
-
-        final ApartmentResponseDto responseDto = apartmentMapper.toDto(saved);
-        responseDto.setPhotoUrls(getPhotos(id));
-
-        return responseDto;
+        return apartmentMapper.toDto(saved);
     }
 
     public ApartmentResponseDto patch(UUID id, ApartmentPatchDto dto) {
         final Apartment entity = apartmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Apartment",  "id", id));
 
         apartmentMapper.patchEntity(entity, dto);
+        if (dto.getPhotoUrls() != null)
+            entity.setPhotoUrls(new HashSet<>(dto.getPhotoUrls()));
 
         final Apartment saved = apartmentRepository.saveAndFlush(entity);
 
-        if (dto.getPhotoUrls() != null) {
-            photoRepository.deleteAll(photoRepository.findByIdPropertyId(id));
-            savePhotos(dto.getPhotoUrls(), id);
-        }
-
-        final ApartmentResponseDto responseDto = apartmentMapper.toDto(saved);
-        responseDto.setPhotoUrls(getPhotos(id));
-
-        return responseDto;
+        return apartmentMapper.toDto(saved);
     }
 }

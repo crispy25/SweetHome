@@ -6,10 +6,8 @@ import com.sweethome.backend.entity.Property;
 import com.sweethome.backend.entity.User;
 import com.sweethome.backend.exception.ResourceNotFoundException;
 import com.sweethome.backend.repository.FavoriteRepository;
-import com.sweethome.backend.repository.PropertyPhotoRepository;
 import com.sweethome.backend.repository.PropertyRepository;
 import com.sweethome.backend.service.dto.FavoriteResponseDto;
-import com.sweethome.backend.service.dto.PropertyResponseDto;
 import com.sweethome.backend.service.mapper.FavoriteMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +21,12 @@ public class FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
     private final PropertyRepository propertyRepository;
-    private final PropertyPhotoRepository photoRepository;
     private final UserService userService;
     private final FavoriteMapper favoriteMapper;
 
-    public FavoriteService(FavoriteRepository favoriteRepository, PropertyRepository propertyRepository, PropertyPhotoRepository photoRepository, UserService userService, FavoriteMapper favoriteMapper) {
+    public FavoriteService(FavoriteRepository favoriteRepository, PropertyRepository propertyRepository, UserService userService, FavoriteMapper favoriteMapper) {
         this.favoriteRepository = favoriteRepository;
         this.propertyRepository = propertyRepository;
-        this.photoRepository = photoRepository;
         this.userService = userService;
         this.favoriteMapper = favoriteMapper;
     }
@@ -66,20 +62,7 @@ public class FavoriteService {
     public List<FavoriteResponseDto> getAll() {
         return favoriteRepository.findByUserId(userService.getCurrentUserId())
                 .stream()
-                .map(favorite -> {
-                    FavoriteResponseDto dto = favoriteMapper.toDto(favorite);
-
-                    PropertyResponseDto property = dto.getProperty();
-                    property.setPhotoUrls(getPhotos(property.getId()));
-
-                    return dto;
-                })
-                .toList();
-    }
-
-    private List<String> getPhotos(UUID propertyId) {
-        return photoRepository.findByIdPropertyId(propertyId).stream()
-                .map(photo -> photo.getId().getPhotoUrl())
+                .map(favoriteMapper::toDto)
                 .toList();
     }
 }

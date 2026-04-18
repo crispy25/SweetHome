@@ -3,13 +3,15 @@ package com.sweethome.backend.entity;
 import com.sweethome.backend.constants.PropertyType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -76,4 +78,9 @@ public abstract class Property {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "last_updated")
     private Instant lastUpdated;
+
+    @ElementCollection
+    @CollectionTable(name = "property_photos", joinColumns = @JoinColumn(name = "property_id"))
+    @Column(name = "photo_url")
+    private Set<String> photoUrls;
 }
