@@ -4,9 +4,9 @@ import com.sweethome.backend.entity.Role;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface RoleMapper {
+public abstract class RoleMapper {
 
-    default String map(Role role) {
+    String map(Role role) {
         return role.getName();
     }
 }
