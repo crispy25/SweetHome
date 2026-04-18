@@ -37,7 +37,7 @@ public class SecurityConfiguration {
            http.authorizeHttpRequests(auth -> auth
                    .requestMatchers("/api/v1/auth/login", "/api/v1/auth/register",
                            "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                   .requestMatchers(HttpMethod.GET, "/api/v1/properties/**").permitAll()
+                   .requestMatchers(HttpMethod.GET, "/api/v1/properties/**", "/api/v1/feedback/**", "/api/v1/feedback-options/**").permitAll()
                    .requestMatchers(HttpMethod.POST, "/api/v1/properties/search").permitAll()
                    .anyRequest().authenticated())
                    .exceptionHandling((exception)-> exception.authenticationEntryPoint(authEntryPoint))

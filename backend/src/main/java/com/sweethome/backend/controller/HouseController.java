@@ -17,13 +17,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/houses")
 public class HouseController implements SecuredRestController {
+
     private final HouseService houseService;
+
+    private static final Logger logger = LoggerFactory.getLogger(HouseController.class);
 
     public HouseController(HouseService houseService) {
         this.houseService = houseService;
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(HouseController.class);
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
