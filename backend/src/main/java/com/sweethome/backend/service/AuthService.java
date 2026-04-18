@@ -33,10 +33,10 @@ public class AuthService {
     private RoleRepository roleRepository;
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtGenerator jwtGenerator;
-
+    @Autowired
+    private EmailService emailService;
 
     public void register(RegisterDto registerDto) {
 
@@ -53,6 +53,8 @@ public class AuthService {
                 .setUsername(registerDto.getUsername())
                 .setPhoneNumber(registerDto.getPhoneNumber())
                 .setRoles(roleList));
+
+        emailService.sendEmail(registerDto.getEmail(), "Welcome to SweetHome!", "Hi " + registerDto.getUsername() + "!" + "\nYour account has been successfully registered!");
     }
 
     public String login(LoginDto loginDto) {
