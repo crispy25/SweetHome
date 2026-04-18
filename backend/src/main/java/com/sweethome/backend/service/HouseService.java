@@ -4,13 +4,10 @@ import com.sweethome.backend.entity.House;
 import com.sweethome.backend.entity.User;
 import com.sweethome.backend.exception.ResourceNotFoundException;
 import com.sweethome.backend.repository.HouseRepository;
-import com.sweethome.backend.repository.UserRepository;
 import com.sweethome.backend.service.dto.HouseDto;
 import com.sweethome.backend.service.dto.HousePatchDto;
 import com.sweethome.backend.service.dto.HouseResponseDto;
 import com.sweethome.backend.service.mapper.HouseMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +19,17 @@ import java.util.UUID;
 public class HouseService {
 
     private final HouseRepository houseRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final HouseMapper houseMapper;
 
-    public HouseService(HouseRepository houseRepository, UserRepository userRepository, HouseMapper apartmentMapper) {
+    public HouseService(HouseRepository houseRepository, UserService userService, HouseMapper apartmentMapper) {
         this.houseRepository = houseRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.houseMapper = apartmentMapper;
     }
 
     public HouseResponseDto save(HouseDto dto) {
-        final UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        final String email = user.getUsername();
-        final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User",  "email", email));
+        final User seller = userService.getCurrentUser();
 
         final House entity = houseMapper.toEntity(dto);
         entity.setSeller(seller);

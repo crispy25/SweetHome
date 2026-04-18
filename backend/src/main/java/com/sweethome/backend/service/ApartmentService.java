@@ -4,13 +4,10 @@ import com.sweethome.backend.entity.Apartment;
 import com.sweethome.backend.entity.User;
 import com.sweethome.backend.exception.ResourceNotFoundException;
 import com.sweethome.backend.repository.ApartmentRepository;
-import com.sweethome.backend.repository.UserRepository;
 import com.sweethome.backend.service.dto.ApartmentDto;
 import com.sweethome.backend.service.dto.ApartmentPatchDto;
 import com.sweethome.backend.service.dto.ApartmentResponseDto;
 import com.sweethome.backend.service.mapper.ApartmentMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +19,17 @@ import java.util.UUID;
 public class ApartmentService {
 
     private final ApartmentRepository apartmentRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ApartmentMapper apartmentMapper;
 
-    public ApartmentService(ApartmentRepository apartmentRepository, UserRepository userRepository, ApartmentMapper apartmentMapper) {
+    public ApartmentService(ApartmentRepository apartmentRepository, UserService userService, ApartmentMapper apartmentMapper) {
         this.apartmentRepository = apartmentRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.apartmentMapper = apartmentMapper;
     }
 
     public ApartmentResponseDto save(ApartmentDto dto) {
-        final UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        final String email = user.getUsername();
-        final User seller = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "email",  email));
+        final User seller = userService.getCurrentUser();
 
         final Apartment entity = apartmentMapper.toEntity(dto);
         entity.setSeller(seller);
