@@ -3,6 +3,7 @@ package com.sweethome.backend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,10 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorObject> handleValidationException(
-            MethodArgumentNotValidException ex,
-            WebRequest request
-    ) {
+    public ResponseEntity<ErrorObject> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
         FieldError fieldError = ex.getBindingResult().getFieldErrors().get(0);
         String errorMessage = fieldError.getField() + ": " + fieldError.getDefaultMessage();
 
@@ -54,12 +52,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorObject> handleNotFound(ResourceNotFoundException ex) {
-
         ErrorObject errorObject = new ErrorObject()
                 .setStatusCode(HttpStatus.NOT_FOUND.value())
                 .setMessage(ex.getMessage())
                 .setTimestamp(LocalDateTime.now());
 
         return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorObject> handleJsonParseError(HttpMessageNotReadableException ex) {
+        ErrorObject errorObject = new ErrorObject()
+                .setStatusCode(HttpStatus.BAD_REQUEST.value())
+                .setMessage(ex.getMessage())
+                .setTimestamp(LocalDateTime.now());
+
+        return new ResponseEntity<>(errorObject, HttpStatus.BAD_REQUEST);
     }
 }
