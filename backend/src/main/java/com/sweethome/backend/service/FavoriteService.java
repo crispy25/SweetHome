@@ -9,10 +9,13 @@ import com.sweethome.backend.repository.FavoriteRepository;
 import com.sweethome.backend.repository.PropertyRepository;
 import com.sweethome.backend.service.dto.FavoriteResponseDto;
 import com.sweethome.backend.service.mapper.FavoriteMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -59,10 +62,9 @@ public class FavoriteService {
         favoriteRepository.deleteById(id);
     }
 
-    public List<FavoriteResponseDto> getAll() {
-        return favoriteRepository.findByUserId(userService.getCurrentUserId())
-                .stream()
-                .map(favoriteMapper::toDto)
-                .toList();
+    public Page<FavoriteResponseDto> getAll(int page, int size) {
+        final Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        final Page<Favorite> favorites = favoriteRepository.findAllByUserId(userService.getCurrentUserId(), pageable);
+        return favorites.map(favoriteMapper::toDto);
     }
 }

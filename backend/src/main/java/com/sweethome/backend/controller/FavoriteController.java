@@ -4,11 +4,11 @@ import com.sweethome.backend.service.FavoriteService;
 import com.sweethome.backend.service.dto.FavoriteResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -47,12 +47,12 @@ public class FavoriteController implements SecuredRestController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-    public ResponseEntity<List<FavoriteResponseDto>> getAll() {
-        logger.info("Request to get all favorites");
+    public ResponseEntity<Page<FavoriteResponseDto>> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        logger.info("Request to get favorites");
 
-        final List<FavoriteResponseDto> favorites = favoriteService.getAll();
+        final Page<FavoriteResponseDto> favorites = favoriteService.getAll(page, size);
 
-        logger.info("Successfully retrieved all favorites:" + favorites);
+        logger.info("Successfully retrieved favorites: {}", favorites);
         return ResponseEntity.ok(favorites);
     }
 }
