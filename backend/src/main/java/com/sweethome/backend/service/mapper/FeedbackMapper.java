@@ -7,12 +7,13 @@ import com.sweethome.backend.service.dto.FeedbackResponseDto;
 import jakarta.validation.constraints.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = RoleMapper.class)
+@Mapper(componentModel = "spring", uses = RoleMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class FeedbackMapper {
 
     @Mapping(target = "feedbackOptions", expression = "java(mapOptionIds(feedback.getFeedbackOptions()))")

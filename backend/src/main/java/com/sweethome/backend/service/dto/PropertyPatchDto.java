@@ -39,6 +39,5 @@ public abstract class PropertyPatchDto {
     @Positive
     private BigDecimal price;
     @Schema(example = "[\"GardenPhoto.png\", \"RoomPhoto.png\"]")
-    @NotNull
     private List<String> photoUrls;
 }
