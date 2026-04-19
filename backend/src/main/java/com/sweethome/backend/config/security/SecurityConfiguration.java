@@ -1,6 +1,5 @@
 package com.sweethome.backend.config.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,10 +24,13 @@ public class SecurityConfiguration {
     @Value("${vars.security.enable}")
     private boolean securityEnabled;
 
-    private JwtAuthEntryPoint authEntryPoint;
-
-    @Autowired
+    private final JwtAuthEntryPoint authEntryPoint;
     private CustomUserDetailsService userDetailsService;
+
+    public SecurityConfiguration(JwtAuthEntryPoint authEntryPoint, CustomUserDetailsService userDetailsService) {
+        this.authEntryPoint = authEntryPoint;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public SecurityFilterChain authServerSecurityFilterChain (HttpSecurity http) throws Exception{
