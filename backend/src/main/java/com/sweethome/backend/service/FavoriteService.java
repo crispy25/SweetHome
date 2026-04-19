@@ -56,7 +56,6 @@ public class FavoriteService {
     public void remove(UUID propertyId) {
         final UUID userId = currentUserService.getCurrentUserId();
         final FavoriteId id = new FavoriteId(userId, propertyId);
-        favoriteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Favorite", "property id", propertyId));
 
         favoriteRepository.deleteById(id);
     }
