@@ -1,7 +1,7 @@
 package com.sweethome.backend.entity;
 
-import com.sweethome.backend.constants.ApartmentLayout;
-import com.sweethome.backend.constants.PropertyType;
+import com.sweethome.backend.enums.ApartmentLayout;
+import com.sweethome.backend.enums.PropertyType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

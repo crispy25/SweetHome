@@ -7,15 +7,16 @@ import com.sweethome.backend.service.dto.ApartmentResponseDto;
 import jakarta.validation.constraints.NotNull;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = RoleMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ApartmentMapper {
 
-    public abstract ApartmentResponseDto toDto(@NotNull Apartment entity);
+    @Mapping(source = "seller.id", target = "sellerId")
+    public abstract ApartmentResponseDto toDto(@NotNull Apartment apartment);
 
     public abstract Apartment toEntity(@NotNull ApartmentDto dto);
 
-    public abstract void updateEntity(@MappingTarget Apartment houseListing, ApartmentDto dto);
+    public abstract void updateEntity(@MappingTarget Apartment apartment, ApartmentDto dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void patchEntity(@MappingTarget Apartment houseListing, ApartmentPatchDto dto);
+    public abstract void patchEntity(@MappingTarget Apartment apartment, ApartmentPatchDto dto);
 }

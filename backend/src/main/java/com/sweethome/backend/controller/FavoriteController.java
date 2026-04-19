@@ -25,13 +25,13 @@ public class FavoriteController implements SecuredRestController {
 
     @PostMapping("/{propertyId}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
-    public ResponseEntity<Void> addFavorite(@PathVariable UUID propertyId) {
+    public ResponseEntity<FavoriteResponseDto> addFavorite(@PathVariable UUID propertyId) {
         logger.info("Request to add property {} to favorites", propertyId);
 
-        favoriteService.add(propertyId);
+        FavoriteResponseDto response = favoriteService.add(propertyId);
 
         logger.info("Successfully added property {} to favorites", propertyId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{propertyId}")

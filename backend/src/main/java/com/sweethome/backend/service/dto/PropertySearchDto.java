@@ -1,33 +1,20 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.constants.ApartmentLayout;
-import com.sweethome.backend.constants.HouseType;
-import com.sweethome.backend.constants.PropertySortByType;
-import com.sweethome.backend.constants.PropertyType;
+import com.sweethome.backend.enums.ApartmentLayout;
+import com.sweethome.backend.enums.HouseType;
+import com.sweethome.backend.enums.PropertyType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
-import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Getter
 public class PropertySearchDto {
-
-    @Schema(example = "0")
-    @PositiveOrZero
-    private Integer page;
-    @Schema(example = "5")
-    @Positive
-    private Integer size;
-
-    @Schema(example = "PRICE")
-    private PropertySortByType sortBy;
-    private Sort.Direction sortDirection;
 
     @Schema(example = "2")
     @Positive

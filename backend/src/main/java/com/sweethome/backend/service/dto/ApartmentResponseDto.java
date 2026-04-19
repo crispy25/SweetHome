@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.constants.ApartmentLayout;
+import com.sweethome.backend.enums.ApartmentLayout;
 import lombok.Getter;
 import lombok.Setter;
 

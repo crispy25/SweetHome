@@ -10,6 +10,5 @@ public interface FeedbackRepository extends PagingAndSortingRepository<Feedback,
     @NotNull
     Page<Feedback> findAll(@NotNull Pageable pageable);
 
-    @NotNull
-    Feedback save(Feedback entity);
+    Feedback saveAndFlush(Feedback entity);
 }

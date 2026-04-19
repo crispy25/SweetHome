@@ -1,13 +1,15 @@
 package com.sweethome.backend.entity;
 
-import com.sweethome.backend.constants.PropertyType;
+import com.sweethome.backend.enums.PropertyType;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -70,12 +72,10 @@ public abstract class Property {
     private PropertyType propertyType;
 
     @CreationTimestamp
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
     @UpdateTimestamp
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "last_updated")
     private Instant lastUpdated;
 

@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.constants.HouseType;
+import com.sweethome.backend.enums.HouseType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

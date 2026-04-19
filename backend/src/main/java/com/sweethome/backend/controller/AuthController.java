@@ -1,7 +1,7 @@
 package com.sweethome.backend.controller;
 
 import com.sweethome.backend.service.AuthService;
-import com.sweethome.backend.service.UserService;
+import com.sweethome.backend.service.CurrentUserService;
 import com.sweethome.backend.service.dto.LoginDto;
 import com.sweethome.backend.service.dto.LoginResponseDto;
 import com.sweethome.backend.service.dto.RegisterDto;
@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -27,7 +27,7 @@ public class AuthController {
     private AuthService authService;
 
     @Autowired
-    private UserService userService;
+    private CurrentUserService currentUserService;
 
     @Autowired
     private UserMapper userMapper;
@@ -49,7 +49,7 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         logger.info("Request to login for user {}", loginDto.getEmail());
         String token = authService.login(loginDto);
-        loginResponseDto.setToken(token).setUser(userMapper.toDto(userService.getCurrentUser()));
+        loginResponseDto.setToken(token).setUser(userMapper.toDto(currentUserService.getCurrentUser()));
         logger.info("Successfully logged in user {}", loginDto.getEmail());
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
@@ -57,10 +57,9 @@ public class AuthController {
     @SecurityRequirement(name = "bearerAuth")
     @RequestMapping(path ="/token", method = RequestMethod.GET)
     public ResponseEntity<?> validateToken() {
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        logger.info("Request to validate token for user {}", user.getUsername());
-        String email = user.getUsername();
-        logger.info("Successfully validated token for user {}", user.getUsername());
-        return new ResponseEntity<>(email, HttpStatus.OK);
+        logger.info("Request to validate token");
+        UUID id = currentUserService.getCurrentUserId();
+        logger.info("Successfully validated token for user {}", id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }

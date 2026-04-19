@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.constants.UserType;
+import com.sweethome.backend.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,5 +20,5 @@ public class FeedbackResponseDto {
     private String message;
     private Set<Integer> feedbackOptions;
     private Instant createdAt;
-    private UserDto user;
+    private UUID userId;
 }

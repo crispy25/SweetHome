@@ -19,21 +19,20 @@ import java.util.UUID;
 public class HouseService {
 
     private final HouseRepository houseRepository;
-    private final UserService userService;
+    private final CurrentUserService currentUserService;
     private final HouseMapper houseMapper;
 
-    public HouseService(HouseRepository houseRepository, UserService userService, HouseMapper apartmentMapper) {
+    public HouseService(HouseRepository houseRepository, CurrentUserService currentUserService, HouseMapper apartmentMapper) {
         this.houseRepository = houseRepository;
-        this.userService = userService;
+        this.currentUserService = currentUserService;
         this.houseMapper = apartmentMapper;
     }
 
     public HouseResponseDto save(HouseDto dto) {
-        final User seller = userService.getCurrentUser();
+        final User seller = currentUserService.getCurrentUser();
 
         final House entity = houseMapper.toEntity(dto);
         entity.setSeller(seller);
-
         final House saved = houseRepository.saveAndFlush(entity);
 
         return houseMapper.toDto(saved);
@@ -44,7 +43,6 @@ public class HouseService {
 
         houseMapper.updateEntity(entity, dto);
         entity.setPhotoUrls(new HashSet<>(dto.getPhotoUrls()));
-
         final House saved = houseRepository.saveAndFlush(entity);
 
         return houseMapper.toDto(saved);

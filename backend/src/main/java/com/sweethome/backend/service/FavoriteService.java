@@ -24,23 +24,23 @@ public class FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
     private final PropertyRepository propertyRepository;
-    private final UserService userService;
+    private final CurrentUserService currentUserService;
     private final FavoriteMapper favoriteMapper;
 
-    public FavoriteService(FavoriteRepository favoriteRepository, PropertyRepository propertyRepository, UserService userService, FavoriteMapper favoriteMapper) {
+    public FavoriteService(FavoriteRepository favoriteRepository, PropertyRepository propertyRepository, CurrentUserService currentUserService, FavoriteMapper favoriteMapper) {
         this.favoriteRepository = favoriteRepository;
         this.propertyRepository = propertyRepository;
-        this.userService = userService;
+        this.currentUserService = currentUserService;
         this.favoriteMapper = favoriteMapper;
     }
 
-    public void add(UUID propertyId) {
-        final User user = userService.getCurrentUser();
+    public FavoriteResponseDto add(UUID propertyId) {
+        final User user = currentUserService.getCurrentUser();
         final UUID userId = user.getId();
         final FavoriteId id = new FavoriteId(userId, propertyId);
 
         if (favoriteRepository.existsById(id))
-            return;
+            return favoriteMapper.toDto(favoriteRepository.findById(id).get());
 
         final Property property = propertyRepository.findById(propertyId).orElseThrow(() -> new ResourceNotFoundException("Property", "id", propertyId));
 
@@ -48,23 +48,22 @@ public class FavoriteService {
         favorite.setId(id);
         favorite.setProperty(property);
         favorite.setUser(user);
+        final Favorite saved = favoriteRepository.saveAndFlush(favorite);
 
-        favoriteRepository.save(favorite);
+        return favoriteMapper.toDto(saved);
     }
 
     public void remove(UUID propertyId) {
-        final UUID userId = userService.getCurrentUserId();
+        final UUID userId = currentUserService.getCurrentUserId();
         final FavoriteId id = new FavoriteId(userId, propertyId);
-
-        if (!favoriteRepository.existsById(id))
-            return;
+        favoriteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Favorite", "property id", propertyId));
 
         favoriteRepository.deleteById(id);
     }
 
     public Page<FavoriteResponseDto> getAll(int page, int size) {
         final Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        final Page<Favorite> favorites = favoriteRepository.findAllByUserId(userService.getCurrentUserId(), pageable);
+        final Page<Favorite> favorites = favoriteRepository.findAllByUserId(currentUserService.getCurrentUserId(), pageable);
         return favorites.map(favoriteMapper::toDto);
     }
 }

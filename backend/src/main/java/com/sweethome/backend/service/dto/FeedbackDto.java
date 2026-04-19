@@ -1,7 +1,7 @@
 package com.sweethome.backend.service.dto;
 
 
-import com.sweethome.backend.constants.UserType;
+import com.sweethome.backend.enums.UserType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

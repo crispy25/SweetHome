@@ -1,6 +1,6 @@
 package com.sweethome.backend.controller;
 
-import com.sweethome.backend.constants.FeedbackSortByType;
+import com.sweethome.backend.enums.FeedbackSortByType;
 import com.sweethome.backend.service.FeedbackService;
 import com.sweethome.backend.service.dto.FeedbackDto;
 import com.sweethome.backend.service.dto.FeedbackResponseDto;

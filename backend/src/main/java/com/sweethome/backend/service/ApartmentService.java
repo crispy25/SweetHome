@@ -11,7 +11,7 @@ import com.sweethome.backend.service.mapper.ApartmentMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.UUID;
 
 @Service
@@ -19,21 +19,20 @@ import java.util.UUID;
 public class ApartmentService {
 
     private final ApartmentRepository apartmentRepository;
-    private final UserService userService;
+    private final CurrentUserService currentUserService;
     private final ApartmentMapper apartmentMapper;
 
-    public ApartmentService(ApartmentRepository apartmentRepository, UserService userService, ApartmentMapper apartmentMapper) {
+    public ApartmentService(ApartmentRepository apartmentRepository, CurrentUserService currentUserService, ApartmentMapper apartmentMapper) {
         this.apartmentRepository = apartmentRepository;
-        this.userService = userService;
+        this.currentUserService = currentUserService;
         this.apartmentMapper = apartmentMapper;
     }
 
     public ApartmentResponseDto save(ApartmentDto dto) {
-        final User seller = userService.getCurrentUser();
+        final User seller = currentUserService.getCurrentUser();
 
         final Apartment entity = apartmentMapper.toEntity(dto);
         entity.setSeller(seller);
-
         final Apartment saved = apartmentRepository.saveAndFlush(entity);
 
         return apartmentMapper.toDto(saved);
@@ -43,8 +42,8 @@ public class ApartmentService {
         final Apartment entity = apartmentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Apartment",  "id", id));
 
         apartmentMapper.updateEntity(entity, dto);
-        entity.setPhotoUrls(new HashSet<>(dto.getPhotoUrls()));
-
+        entity.setPhotoUrls(new LinkedHashSet<>(dto.getPhotoUrls()));
+        apartmentRepository.saveAndFlush(entity);
         final Apartment saved = apartmentRepository.saveAndFlush(entity);
 
         return apartmentMapper.toDto(saved);
@@ -55,7 +54,7 @@ public class ApartmentService {
 
         apartmentMapper.patchEntity(entity, dto);
         if (dto.getPhotoUrls() != null)
-            entity.setPhotoUrls(new HashSet<>(dto.getPhotoUrls()));
+            entity.setPhotoUrls(new LinkedHashSet<>(dto.getPhotoUrls()));
 
         final Apartment saved = apartmentRepository.saveAndFlush(entity);
 

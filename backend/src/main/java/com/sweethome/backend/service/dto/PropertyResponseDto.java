@@ -1,10 +1,7 @@
 package com.sweethome.backend.service.dto;
 
 
-import com.sweethome.backend.constants.PropertyType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import com.sweethome.backend.enums.PropertyType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +25,7 @@ public class PropertyResponseDto {
     private Integer constructionYear;
     private BigDecimal price;
     private List<String> photoUrls;
-    private UserDto seller;
+    private UUID sellerId;
     private PropertyType propertyType;
     private Instant createdAt;
     private Instant lastUpdated;

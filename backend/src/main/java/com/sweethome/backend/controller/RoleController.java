@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/role")
+@RequestMapping("/api/v1/roles")
 public class RoleController implements SecuredRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleController.class);

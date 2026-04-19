@@ -13,9 +13,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = RoleMapper.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class FeedbackMapper {
 
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(target = "feedbackOptions", expression = "java(mapOptionIds(feedback.getFeedbackOptions()))")
     public abstract FeedbackResponseDto toDto(@NotNull Feedback feedback);
 

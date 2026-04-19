@@ -24,5 +24,8 @@ public interface PropertyRepository extends JpaRepository<Property, UUID>, JpaSp
     Optional<Property> findById(@NonNull UUID uuid);
 
     @NonNull
+    Page<Property> findBySellerId(@NonNull UUID sellerId, @NonNull Pageable pageable);
+
+    @NonNull
     Page<Property> findAll(@NonNull Specification<Property> spec, @NonNull Pageable pageable);
 }

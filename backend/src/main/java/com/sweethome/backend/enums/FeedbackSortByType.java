@@ -1,4 +1,4 @@
-package com.sweethome.backend.constants;
+package com.sweethome.backend.enums;
 
 public enum FeedbackSortByType {
     CREATED_AT("createdAt"),

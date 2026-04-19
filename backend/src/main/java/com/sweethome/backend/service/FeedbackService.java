@@ -1,8 +1,8 @@
 package com.sweethome.backend.service;
 
-import com.sweethome.backend.constants.FeedbackSortByType;
 import com.sweethome.backend.entity.Feedback;
 import com.sweethome.backend.entity.User;
+import com.sweethome.backend.enums.FeedbackSortByType;
 import com.sweethome.backend.repository.FeedbackOptionRepository;
 import com.sweethome.backend.repository.FeedbackRepository;
 import com.sweethome.backend.service.dto.FeedbackDto;
@@ -23,13 +23,13 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
     private final FeedbackOptionRepository feedbackOptionRepository;
-    private final UserService userService;
+    private final CurrentUserService currentUserService;
     private final FeedbackMapper feedbackMapper;
 
-    public FeedbackService(FeedbackRepository feedbackRepository, FeedbackOptionRepository feedbackOptionRepository, UserService userService, FeedbackMapper feedbackMapper) {
+    public FeedbackService(FeedbackRepository feedbackRepository, FeedbackOptionRepository feedbackOptionRepository, CurrentUserService currentUserService, FeedbackMapper feedbackMapper) {
         this.feedbackRepository = feedbackRepository;
         this.feedbackOptionRepository = feedbackOptionRepository;
-        this.userService = userService;
+        this.currentUserService = currentUserService;
         this.feedbackMapper = feedbackMapper;
     }
 
@@ -40,13 +40,13 @@ public class FeedbackService {
     }
 
     public FeedbackResponseDto save(FeedbackDto dto) {
-        final User user = userService.getCurrentUser();
+        final User user = currentUserService.getCurrentUser();
 
         final Feedback entity = feedbackMapper.toEntity(dto);
         entity.setUser(user);
         entity.setFeedbackOptions(new LinkedHashSet<>(feedbackOptionRepository.findAllById(dto.getFeedbackOptionIds())));
+        final Feedback saved = feedbackRepository.saveAndFlush(entity);
 
-        final Feedback saved = feedbackRepository.save(entity);
         return feedbackMapper.toDto(saved);
     }
 }

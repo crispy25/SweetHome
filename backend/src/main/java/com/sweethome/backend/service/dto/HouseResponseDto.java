@@ -1,6 +1,6 @@
 package com.sweethome.backend.service.dto;
 
-import com.sweethome.backend.constants.HouseType;
+import com.sweethome.backend.enums.HouseType;
 import lombok.Getter;
 import lombok.Setter;
 
