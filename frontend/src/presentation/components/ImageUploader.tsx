@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 type Props = {
-  onChange?: (urls: string[]) => void;
+  onChange: (urls: string[]) => void;
 };
 
 const CLOUD_URL = import.meta.env.VITE_CLOUDINARY_URL;
@@ -15,40 +15,35 @@ export default function ImageUploader({ onChange }: Props) {
     formData.append("file", file);
     formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET);
 
-    console.log(CLOUD_URL);
-
-    const res = await fetch(
-    CLOUD_URL,
+    const response = await fetch(CLOUD_URL,
       {
         method: "POST",
         body: formData,
       }
     );
 
-    const data = await res.json();
+    const data = await response.json();
 
-    if (!res.ok) {
+    if (!response.ok)
       throw new Error(data?.error?.message || "Upload failed");
-    }
 
     return data.secure_url as string;
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
-    if (!files.length) return;
+    if (!files.length)
+      return;
 
     setUploading(true);
 
     try {
-      const uploadedUrls = await Promise.all(
-        files.map((file) => uploadToCloudinary(file))
-      );
+      const uploadedUrls = await Promise.all(files.map((file) => uploadToCloudinary(file)));
 
       const newImages = [...images, ...uploadedUrls];
       setImages(newImages);
 
-      onChange?.(newImages);
+      onChange(newImages);
     } catch (err) {
       console.error(err);
     } finally {
@@ -60,19 +55,20 @@ export default function ImageUploader({ onChange }: Props) {
   const handleDelete = (index: number) => {
     const updated = images.filter((_, i) => i !== index);
     setImages(updated);
-    onChange?.(updated);
+    onChange(updated);
   };
 
   return (
-    <div style={{ maxWidth: 600 }}>
-      <input type="file" multiple accept="image/*" onChange={handleUpload} />
-
+    <div style={{ maxWidth: 900 }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <input type="file" multiple accept="image/*" onChange={handleUpload}/>
+      </div>
       {uploading && <p>Uploading...</p>}
 
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: "repeat(3, 2fr)",
           gap: 10,
           marginTop: 20,
         }}
@@ -84,7 +80,7 @@ export default function ImageUploader({ onChange }: Props) {
               alt="uploaded"
               style={{
                 width: "100%",
-                height: 120,
+                height: 150,
                 objectFit: "cover",
                 borderRadius: 8,
               }}
@@ -103,7 +99,7 @@ export default function ImageUploader({ onChange }: Props) {
                 cursor: "pointer",
               }}
             >
-              ✕
+              X
             </button>
           </div>
         ))}

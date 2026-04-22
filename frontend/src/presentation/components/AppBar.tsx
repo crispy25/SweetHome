@@ -27,7 +27,7 @@ function NavBar() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const [, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+  const [ , setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -44,9 +44,8 @@ function NavBar() {
   const handleSettingClick = (setting: string) => {
     handleCloseUserMenu();
 
-    if (setting === 'Add property') {
-      navigate('/properties/create');
-    }
+    if (setting === 'Add property')
+      navigate(`${AppRoute.Properties}/create`);
 
     if (setting === 'Logout') {
       logout();
@@ -56,23 +55,12 @@ function NavBar() {
 
   return (
       <AppBar position="static">
-        <Toolbar sx={{ px: 4 }} disableGutters>
-          <HomeIcon
-            sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, cursor: 'pointer' }}
-            onClick={() => navigate(AppRoute.Home)}
-          />
+        <Toolbar sx={{ px: 4 }}>
+          <HomeIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, cursor: 'pointer' }} onClick={() => navigate(AppRoute.Home)}/>
 
           <Typography
             variant="h6"
-            noWrap
-            sx={{
-              mr: 7,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'Helvetica',
-              fontWeight: 700,
-              color: 'inherit',
-              cursor: 'pointer'
-            }}
+            sx={{ mr: 7, fontWeight: 700, cursor: 'pointer'}}
             onClick={() => navigate(AppRoute.Home)}
           >
             SweetHome
@@ -94,7 +82,7 @@ function NavBar() {
             {!user ? (<Button color="inherit" onClick={() => navigate(AppRoute.Login)}>Login</Button>) : (
               <>
                 <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <IconButton onClick={handleOpenUserMenu}>
                     <Avatar alt={user.username || 'Me'} />
                   </IconButton>
                 </Tooltip>
