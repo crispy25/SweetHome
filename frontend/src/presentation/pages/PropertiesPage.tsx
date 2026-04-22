@@ -4,8 +4,19 @@ import { Configuration, PagePropertyResponseDto, PropertyControllerApi,} from ".
 import { Grid, Card, TextField, Box, Typography, FormControl, InputLabel, Select, MenuItem, Button, Collapse, Divider, CircularProgress, CardMedia, CardContent, Pagination } from "@mui/material";
 import { useDebounce } from "../../hooks/useDebounce";
 import { AppRoute } from "../../routes";
-import { SortBy, Order, PropertyType } from "../../types/PropertyTypes";
+import { PropertyType } from "../../types/PropertyTypes";
 
+export enum SortBy {
+  PRICE = "PRICE",
+  CREATED_AT = "CREATED_AT",
+  ROOMS = "ROOMS",
+  USABLE_AREA = "USABLE_AREA",
+}
+
+export enum Order {
+  ASC = "ASC",
+  DESC = "DESC",
+}
 
 const authConfig = new Configuration({ basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => localStorage.getItem("authToken") || "",});
 const api = new PropertyControllerApi(authConfig);
