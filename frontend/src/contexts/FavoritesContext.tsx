@@ -8,7 +8,7 @@ interface FavoritesContextType {
   favorites: FavoriteResponseDto[];
   page: number;
   totalPages: number;
-  loading: boolean;
+  isContentLoading: boolean;
   loadFavorites: (page?: number) => Promise<void>;
   removeFavorite: (propertyId: string) => Promise<void>;
   addFavorite: (propertyId: string) => Promise<void>;
@@ -27,7 +27,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useState<FavoriteResponseDto[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [isContentLoading, setIsContentLoading] = useState(false);
 
   useEffect(() => {
     if (isLoading || !isAuthenticated) {
@@ -42,7 +42,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     if (!isAuthenticated)
       return;
 
-    setLoading(true);
+    setIsContentLoading(true);
 
     try {
       const response = await favoriteApi.getAll3Raw({page: pageNumber});
@@ -55,7 +55,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       console.error("Failed to fetch favorites:", err);
       setFavorites([]);
     } finally {
-      setLoading(false);
+      setIsContentLoading(false);
     }
   };
 
@@ -105,7 +105,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         favorites,
         page,
         totalPages,
-        loading,
+        isContentLoading,
         loadFavorites,
         removeFavorite,
         addFavorite,

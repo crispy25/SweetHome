@@ -2,9 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { type UserDto as User, type LoginDto as LoginCredentials, type RegisterDto as RegisterData, Configuration } from '../infrastructure/apis/client';
 import { AuthControllerApi } from '../infrastructure/apis/client';
 
-const authConfig = new Configuration({basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => {return localStorage.getItem('authToken') || '';},});
+const authConfig = new Configuration({basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => {return localStorage.getItem('authToken') || '';}});
 const authApi = new AuthControllerApi(authConfig);
-
 
 export enum UserRole {
   USER = 'USER',
@@ -80,8 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (data: RegisterData): Promise<boolean> => {
     try {
-      await authApi.register({registerDto: data});
-      return true;
+      await authApi.registerRaw({registerDto: data});
+      return login({email: data.email, password: data.password});
     } catch (error) {
       console.error('Registration error:', error);
       return false;
@@ -103,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         register,
         logout,
-        isAuthenticated: !!user,
+        isAuthenticated: user !== null && user !== undefined,
         isLoading
       }}
     >
