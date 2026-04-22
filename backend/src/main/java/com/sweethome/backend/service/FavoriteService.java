@@ -53,6 +53,10 @@ public class FavoriteService {
         return favoriteMapper.toDto(saved);
     }
 
+    public boolean isFavorite(UUID propertyId) {
+        return favoriteRepository.existsByUserIdAndPropertyId(currentUserService.getCurrentUserId(), propertyId);
+    }
+
     public void remove(UUID propertyId) {
         final UUID userId = currentUserService.getCurrentUserId();
         final FavoriteId id = new FavoriteId(userId, propertyId);

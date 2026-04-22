@@ -39,7 +39,6 @@ public class FeedbackController implements SecuredRestController {
         return ResponseEntity.ok(responseDtoPage);
     }
 
-
     @PostMapping
     public ResponseEntity<FeedbackResponseDto> createFeedback(@RequestBody @Valid FeedbackDto feedback) {
         logger.info("Request to save feedback");

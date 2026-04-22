@@ -42,7 +42,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(storedToken);
 
         await authApi.validateToken();
-
         setUser(JSON.parse(storedUser));
       } catch (err) {
         console.error('Token invalid:', err);
@@ -115,8 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (!context)
     throw new Error('useAuth must be used within AuthProvider');
-  }
   return context;
 }

@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface FavoriteRepository extends JpaRepository<Favorite, FavoriteId> {
     @NotNull
     Page<Favorite> findAllByUserId(@NotNull UUID userId, @NotNull Pageable pageable);
+
+    boolean existsByUserIdAndPropertyId(@NotNull UUID userId, @NotNull UUID propertyId);
 }

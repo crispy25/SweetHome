@@ -34,6 +34,17 @@ public class FavoriteController implements SecuredRestController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{propertyId}")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
+    public ResponseEntity<Boolean> isFavorite(@PathVariable UUID propertyId) {
+        logger.info("Request to check if property {} is in favorites", propertyId);
+
+        boolean isFavorite = favoriteService.isFavorite(propertyId);
+
+        logger.info("Property {} is{}in favorites", propertyId, isFavorite ? "" : " not ");
+        return ResponseEntity.ok(isFavorite);
+    }
+
     @DeleteMapping("/{propertyId}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('USER')")
     public ResponseEntity<Void> removeFavorite(@PathVariable UUID propertyId) {
