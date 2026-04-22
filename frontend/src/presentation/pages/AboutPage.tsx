@@ -76,7 +76,7 @@ export default function AboutPage() {
   return (
     <Box sx={{ backgroundColor: '#ffffff' }}>
       <Box sx={{ py: 4, ml: 8, mr: 8}}>
-        <Typography variant="h4" sx={{ color: '#000000' }} gutterBottom>
+        <Typography variant="h4" sx={{ fontWeight: 600, color: '#000000' }} gutterBottom>
           About Us
         </Typography>
 

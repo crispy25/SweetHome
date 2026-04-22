@@ -52,7 +52,7 @@ const NumberField = memo(
 export default function PropertiesPage() {
   const navigate = useNavigate();
 
-  const [draftFilters, setDraftFilters] = useState<any>({propertyType: PropertyType.APARTMENT,});
+  const [draftFilters, setDraftFilters] = useState<any>({propertyType: PropertyType.APARTMENT});
   const [page, setPage] = useState(0);
   const [size] = useState(6);
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.CREATED_AT);
@@ -107,7 +107,7 @@ export default function PropertiesPage() {
 
   return (
     <Box sx={{ p: 3, backgroundColor: "#fff", minHeight: "100vh" }}>
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: '#000000' }}>
         Find Properties
       </Typography>
 
