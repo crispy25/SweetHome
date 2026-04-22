@@ -11,6 +11,7 @@ interface FavoritesContextType {
   loading: boolean;
   loadFavorites: (page?: number) => Promise<void>;
   removeFavorite: (propertyId: string) => Promise<void>;
+  addFavorite: (propertyId: string) => Promise<void>;
   isFavorite: (id: string) => Promise<boolean>;
   isAuthenticated: boolean;
 }
@@ -29,8 +30,10 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isLoading || !isAuthenticated)
+    if (isLoading || !isAuthenticated) {
+      setFavorites([]);
       return;
+   }
 
     loadFavorites(0);
   }, [isLoading, isAuthenticated]);
@@ -68,6 +71,20 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const addFavorite = async (propertyId: string) => {
+    if (!isAuthenticated || !favoriteApi || favorites.find((x) => x.property?.id == propertyId))
+      return;
+
+    try {
+      const favorite = await favoriteApi.addFavorite({ propertyId });
+
+      setFavorites((prev) => [...prev, favorite]);
+      toast.success('Added property to favorites!')
+    } catch (err) {
+      console.error("Failed to add property to favorites:", err);
+    }
+  };
+
   const removeFavorite = async (propertyId: string) => {
     if (!isAuthenticated || !favoriteApi)
       return;
@@ -76,7 +93,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       await favoriteApi.removeFavorite({ propertyId });
 
       setFavorites((prev) => prev.filter((f) => f.property?.id !== propertyId));
-      toast.success('Remove property from favorites!')
+      toast.success('Removed property from favorites!')
     } catch (err) {
       console.error("Failed to remove favorite:", err);
     }
@@ -91,6 +108,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         loading,
         loadFavorites,
         removeFavorite,
+        addFavorite,
         isFavorite,
         isAuthenticated
       }}

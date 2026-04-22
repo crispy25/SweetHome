@@ -21,7 +21,7 @@ const pages = [
     { label: 'About', path: AppRoute.About }
 ];
 
-const settings = ['My properties', 'Logout'];
+const settings = ['Add property', 'Logout'];
 
 function NavBar() {
   const navigate = useNavigate();
@@ -43,6 +43,10 @@ function NavBar() {
 
   const handleSettingClick = (setting: string) => {
     handleCloseUserMenu();
+
+    if (setting === 'Add property') {
+      navigate('/properties/create');
+    }
 
     if (setting === 'Logout') {
       logout();

@@ -19,30 +19,38 @@ export enum HouseType {
   OTHER = 'OTHER'
 }
 
-export interface Property {
-  id: string;
-  title: string;
-  description: string;
-  address: string;
-  rooms: number;
-  bathrooms: number;
-  usableArea: number;
-  constructionYear: number;
-  price: number;
-  photoUrls: string[];
+export interface BaseProperty {
+  id?: string;
+  title?: string;
+  description?: string;
+  address?: string;
+  rooms?: number;
+  bathrooms?: number;
+  usableArea?: number;
+  constructionYear?: number;
+  price?: number;
+  photoUrls?: string[];
+  sellerId?: string;
   propertyType: PropertyType;
-  sellerId: number;
-  createdAt: string;
-  lastUpdated: string;
-  
+  createdAt?: Date;
+  lastUpdated?: Date;
+}
+
+export interface ApartmentProperty extends BaseProperty {
+  propertyType: PropertyType.APARTMENT;
   comfort?: number;
   floor?: number;
-  layout?: ApartmentLayout;
-  
+  layout?: string;
+}
+
+export interface HouseProperty extends BaseProperty {
+  propertyType: PropertyType.HOUSE;
   floors?: number;
   landArea?: number;
-  houseType?: HouseType;
+  houseType?: string;
 }
+
+export type Property = ApartmentProperty | HouseProperty;
 
 
 export interface Favorite {

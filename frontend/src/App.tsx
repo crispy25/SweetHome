@@ -11,6 +11,7 @@ import NavBar from "./presentation/components/AppBar";
 import PropertiesPage from "./presentation/pages/PropertiesPage";
 import FavoritesPage from "./presentation/pages/FavoritesPage";
 import { PropertyDetailPage } from "./presentation/pages/PropertyDetailPage";
+import PropertyEditPage from "./presentation/pages/PropertyEditPage";
 
 export function App() {
   return <AuthProvider>
@@ -25,6 +26,8 @@ export function App() {
                 <Route path="/properties/:id" element={<PropertyDetailPage />} />
                 <Route path={AppRoute.About} element={<AboutPage />} />
                 <Route path={AppRoute.Favorites} element={<FavoritesPage />} />
+                <Route path="/properties/edit/:id" element={<PropertyEditPage />} /> 
+                <Route path="/properties/create" element={<PropertyEditPage />} />
               </Routes>
           </FavoritesProvider>
         </AuthProvider>
