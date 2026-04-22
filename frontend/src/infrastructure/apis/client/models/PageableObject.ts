@@ -35,6 +35,24 @@ export interface PageableObject {
     offset?: number;
     /**
      * 
+     * @type {Array<SortObject>}
+     * @memberof PageableObject
+     */
+    sort?: Array<SortObject>;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    pageNumber?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PageableObject
+     */
+    pageSize?: number;
+    /**
+     * 
      * @type {boolean}
      * @memberof PageableObject
      */
@@ -45,24 +63,6 @@ export interface PageableObject {
      * @memberof PageableObject
      */
     unpaged?: boolean;
-    /**
-     * 
-     * @type {Array<SortObject>}
-     * @memberof PageableObject
-     */
-    sort?: Array<SortObject>;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    pageSize?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PageableObject
-     */
-    pageNumber?: number;
 }
 
 /**
@@ -83,11 +83,11 @@ export function PageableObjectFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         
         'offset': json['offset'] == null ? undefined : json['offset'],
+        'sort': json['sort'] == null ? undefined : ((json['sort'] as Array<any>).map(SortObjectFromJSON)),
+        'pageNumber': json['pageNumber'] == null ? undefined : json['pageNumber'],
+        'pageSize': json['pageSize'] == null ? undefined : json['pageSize'],
         'paged': json['paged'] == null ? undefined : json['paged'],
         'unpaged': json['unpaged'] == null ? undefined : json['unpaged'],
-        'sort': json['sort'] == null ? undefined : ((json['sort'] as Array<any>).map(SortObjectFromJSON)),
-        'pageSize': json['pageSize'] == null ? undefined : json['pageSize'],
-        'pageNumber': json['pageNumber'] == null ? undefined : json['pageNumber'],
     };
 }
 
@@ -103,11 +103,11 @@ export function PageableObjectToJSONTyped(value?: PageableObject | null, ignoreD
     return {
         
         'offset': value['offset'],
+        'sort': value['sort'] == null ? undefined : ((value['sort'] as Array<any>).map(SortObjectToJSON)),
+        'pageNumber': value['pageNumber'],
+        'pageSize': value['pageSize'],
         'paged': value['paged'],
         'unpaged': value['unpaged'],
-        'sort': value['sort'] == null ? undefined : ((value['sort'] as Array<any>).map(SortObjectToJSON)),
-        'pageSize': value['pageSize'],
-        'pageNumber': value['pageNumber'],
     };
 }
 

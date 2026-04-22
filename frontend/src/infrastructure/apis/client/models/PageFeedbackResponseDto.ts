@@ -73,18 +73,6 @@ export interface PageFeedbackResponseDto {
     number?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof PageFeedbackResponseDto
-     */
-    first?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PageFeedbackResponseDto
-     */
-    last?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PageFeedbackResponseDto
      */
@@ -101,6 +89,18 @@ export interface PageFeedbackResponseDto {
      * @memberof PageFeedbackResponseDto
      */
     pageable?: PageableObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageFeedbackResponseDto
+     */
+    first?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PageFeedbackResponseDto
+     */
+    last?: boolean;
     /**
      * 
      * @type {boolean}
@@ -131,11 +131,11 @@ export function PageFeedbackResponseDtoFromJSONTyped(json: any, ignoreDiscrimina
         'size': json['size'] == null ? undefined : json['size'],
         'content': json['content'] == null ? undefined : ((json['content'] as Array<any>).map(FeedbackResponseDtoFromJSON)),
         'number': json['number'] == null ? undefined : json['number'],
-        'first': json['first'] == null ? undefined : json['first'],
-        'last': json['last'] == null ? undefined : json['last'],
         'numberOfElements': json['numberOfElements'] == null ? undefined : json['numberOfElements'],
         'sort': json['sort'] == null ? undefined : ((json['sort'] as Array<any>).map(SortObjectFromJSON)),
         'pageable': json['pageable'] == null ? undefined : PageableObjectFromJSON(json['pageable']),
+        'first': json['first'] == null ? undefined : json['first'],
+        'last': json['last'] == null ? undefined : json['last'],
         'empty': json['empty'] == null ? undefined : json['empty'],
     };
 }
@@ -156,11 +156,11 @@ export function PageFeedbackResponseDtoToJSONTyped(value?: PageFeedbackResponseD
         'size': value['size'],
         'content': value['content'] == null ? undefined : ((value['content'] as Array<any>).map(FeedbackResponseDtoToJSON)),
         'number': value['number'],
-        'first': value['first'],
-        'last': value['last'],
         'numberOfElements': value['numberOfElements'],
         'sort': value['sort'] == null ? undefined : ((value['sort'] as Array<any>).map(SortObjectToJSON)),
         'pageable': PageableObjectToJSON(value['pageable']),
+        'first': value['first'],
+        'last': value['last'],
         'empty': value['empty'],
     };
 }

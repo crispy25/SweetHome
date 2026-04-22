@@ -11,11 +11,11 @@ Name | Type
 `size` | number
 `content` | [Array&lt;FeedbackResponseDto&gt;](FeedbackResponseDto.md)
 `number` | number
-`first` | boolean
-`last` | boolean
 `numberOfElements` | number
 `sort` | [Array&lt;SortObject&gt;](SortObject.md)
 `pageable` | [PageableObject](PageableObject.md)
+`first` | boolean
+`last` | boolean
 `empty` | boolean
 
 ## Example
@@ -30,11 +30,11 @@ const example = {
   "size": null,
   "content": null,
   "number": null,
-  "first": null,
-  "last": null,
   "numberOfElements": null,
   "sort": null,
   "pageable": null,
+  "first": null,
+  "last": null,
   "empty": null,
 } satisfies PageFeedbackResponseDto
 

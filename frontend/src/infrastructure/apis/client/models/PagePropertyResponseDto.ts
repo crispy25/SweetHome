@@ -73,18 +73,6 @@ export interface PagePropertyResponseDto {
     number?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof PagePropertyResponseDto
-     */
-    first?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PagePropertyResponseDto
-     */
-    last?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof PagePropertyResponseDto
      */
@@ -101,6 +89,18 @@ export interface PagePropertyResponseDto {
      * @memberof PagePropertyResponseDto
      */
     pageable?: PageableObject;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PagePropertyResponseDto
+     */
+    first?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof PagePropertyResponseDto
+     */
+    last?: boolean;
     /**
      * 
      * @type {boolean}
@@ -131,11 +131,11 @@ export function PagePropertyResponseDtoFromJSONTyped(json: any, ignoreDiscrimina
         'size': json['size'] == null ? undefined : json['size'],
         'content': json['content'] == null ? undefined : ((json['content'] as Array<any>).map(PropertyResponseDtoFromJSON)),
         'number': json['number'] == null ? undefined : json['number'],
-        'first': json['first'] == null ? undefined : json['first'],
-        'last': json['last'] == null ? undefined : json['last'],
         'numberOfElements': json['numberOfElements'] == null ? undefined : json['numberOfElements'],
         'sort': json['sort'] == null ? undefined : ((json['sort'] as Array<any>).map(SortObjectFromJSON)),
         'pageable': json['pageable'] == null ? undefined : PageableObjectFromJSON(json['pageable']),
+        'first': json['first'] == null ? undefined : json['first'],
+        'last': json['last'] == null ? undefined : json['last'],
         'empty': json['empty'] == null ? undefined : json['empty'],
     };
 }
@@ -156,11 +156,11 @@ export function PagePropertyResponseDtoToJSONTyped(value?: PagePropertyResponseD
         'size': value['size'],
         'content': value['content'] == null ? undefined : ((value['content'] as Array<any>).map(PropertyResponseDtoToJSON)),
         'number': value['number'],
-        'first': value['first'],
-        'last': value['last'],
         'numberOfElements': value['numberOfElements'],
         'sort': value['sort'] == null ? undefined : ((value['sort'] as Array<any>).map(SortObjectToJSON)),
         'pageable': PageableObjectToJSON(value['pageable']),
+        'first': value['first'],
+        'last': value['last'],
         'empty': value['empty'],
     };
 }
