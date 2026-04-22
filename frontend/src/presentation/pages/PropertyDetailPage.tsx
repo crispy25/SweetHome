@@ -1,81 +1,20 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import {
-  Box,
-  Typography,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Chip,
-  Divider,
-  Stack,
-  IconButton
-} from '@mui/material';
-
-import {
-  ArrowBack,
-  Favorite,
-  FavoriteBorder,
-  Edit,
-  Delete
-} from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { Configuration, PropertyControllerApi } from '../../infrastructure/apis/client';
 import { AppRoute } from '../../routes';
+import { ArrowBack, Favorite, FavoriteBorder, Edit, Delete } from '@mui/icons-material';
+import { Box, Typography, Button, Grid, Card, CardContent, Stack, Chip, IconButton, Divider } from '@mui/material';
+import { PropertyForm } from '../../types/PropertyForm';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { getPropertyForm } from '../../utils/utils';
+import { PropertyType } from '../../types/PropertyType';
 
-enum PropertyType {
-  APARTMENT = 'APARTMENT',
-  HOUSE = 'HOUSE'
-}
-
-type Property = {
-  id?: string;
-  title?: string;
-  description?: string;
-  address?: string;
-  rooms?: number;
-  bathrooms?: number;
-  usableArea?: number;
-  constructionYear?: number;
-  price?: number;
-  photoUrls?: string[];
-  sellerId?: string;
-  propertyType: PropertyType;
-  createdAt?: Date;
-  lastUpdated?: Date;
-
-  comfort?: number;
-  floor?: number;
-  layout?: string;
-
-  floors?: number;
-  landArea?: number;
-  houseType?: string;
-};
-
-const authConfig = new Configuration({basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => {return localStorage.getItem('authToken') || '';},});
+const authConfig = new Configuration({basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => {return localStorage.getItem('authToken') || '';}});
 const propertyApi = new PropertyControllerApi(authConfig);
-
-function mapToProperty(dto: any): Property {
-  if (dto.propertyType === PropertyType.APARTMENT) {
-    return { ...dto, propertyType: PropertyType.APARTMENT };
-  }
-
-  if (dto.propertyType === PropertyType.HOUSE) {
-    return { ...dto, propertyType: PropertyType.HOUSE };
-  }
-
-  throw new Error('Invalid property type');
-}
-
-async function getProperty(id: string): Promise<Property> {
-  const dto = await propertyApi.getById1({ id });
-  return mapToProperty(dto);
-}
 
 export function PropertyDetailPage() {
   const { id } = useParams();
@@ -84,32 +23,29 @@ export function PropertyDetailPage() {
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const { isAuthenticated, user } = useAuth();
 
-  const [property, setProperty] = useState<Property | null>(null);
+  const [property, setProperty] = useState<PropertyForm | null>(null);
   const [imageIndex, setImageIndex] = useState(0);
-  const [isFavoriteLocal, setIsFavoriteLocal] = useState(false);
+  const [isCurrentFavorite, setIsCurrentFavorite] = useState(false);
 
   useEffect(() => {
-    if (id)
-      load();
-  }, [id, user]);
+    if (!id)
+      return;
 
-  const load = async () => {
     try {
-      const data = await getProperty(id || '');
-      console.log(user?.id);
-      setProperty(data);
-    } catch {
+      getPropertyForm(id).then((data) => setProperty(data));
+    } catch (err) {
+      console.error(err);
       toast.error('Failed to load property');
     }
-  };
+  }, [id, user]);
 
   useEffect(() => {
-    const check = async () => {
+    const updateIsFavorite = async () => {
       const result = await isFavorite(property?.id || '');
-      setIsFavoriteLocal(result);
+      setIsCurrentFavorite(result);
     };
 
-    check();
+    updateIsFavorite();
   }, [property]);
 
   const handleToggleFavorite = async () => {
@@ -117,15 +53,13 @@ export function PropertyDetailPage() {
       return;
 
     try {
-      if (isFavoriteLocal) {
+      if (isCurrentFavorite)
         await removeFavorite(property.id || '' );
-        setIsFavoriteLocal(false);
-      }
-      else {
+      else
         await addFavorite(property.id || '' );
-        setIsFavoriteLocal(true);
-      }
+      setIsCurrentFavorite(!isCurrentFavorite);
     } catch {
+      toast.error('Failed to toggle favorite');
     }
   };
 
@@ -134,9 +68,6 @@ export function PropertyDetailPage() {
       return;
 
     try {
-      console.log(user?.id);
-      console.log(property.sellerId );
-      console.log(property.id );
       await propertyApi._delete({ id: property.id || '' });
       toast.success('Deleted successfully');
       navigate(`${AppRoute.Properties}`);
@@ -146,6 +77,7 @@ export function PropertyDetailPage() {
   };
 
   const formatPrice = (price?: number) => price ? new Intl.NumberFormat('en-US', {style: 'currency', currency: 'EUR', maximumFractionDigits: 0}).format(price) : '-';
+  
   const handlePrevImage = () => {
     const photos = property?.photoUrls;
 
@@ -168,23 +100,12 @@ export function PropertyDetailPage() {
     );
   };
 
-  if (!property) {
-    return (
-      <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Typography variant="h5">Loading...</Typography>
-      </Box>
-    );
-  }
+  if (!property)
+    return (<Box sx={{ p: 4, textAlign: 'center' }}> <Typography variant="h5">Loading...</Typography> </Box>);
 
   return (
     <Box sx={{ p: 4, bgcolor: '#f5f5f5', minHeight: '100vh' }}>
-      <Button
-        startIcon={<ArrowBack />}
-        onClick={() => navigate(AppRoute.Properties)}
-        sx={{ mb: 2 }}
-      >
-        Back
-      </Button>
+      <Button startIcon={<ArrowBack />} onClick={() => navigate(AppRoute.Properties)} sx={{ mb: 2 }}>Back</Button>
 
       <Grid container spacing={4}>
         <Grid size={{ xs: 12, md: 8 }}>
@@ -192,37 +113,29 @@ export function PropertyDetailPage() {
             <CardContent sx={{ p: 4 }}>
               <Stack spacing={2}>
                 <Stack direction="row" sx={{justifyContent: "space-between", alignItems: "flex-start"}}>
-                  <Box>
-                    <Chip label={property.propertyType} sx={{ mb: 1 }} />
-
-                    <Typography variant="h4">
-                      {property.title}
-                    </Typography>
-
-                    <Typography color="text.secondary">
-                      {property.address}
-                    </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                    <Chip label={property.propertyType} sx={{ mb: 3 }} />
+                    <Typography variant="h4">{property.title}</Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <LocationOnIcon sx={{ml: 3}} />
+                      <Typography color="text.secondary">
+                        {property.address}
+                      </Typography>
+                    </Box>
                   </Box>
-
                   { isAuthenticated &&
                     <Stack direction="row">
-                      
-                      <IconButton onClick={handleToggleFavorite}>
-                        { isFavoriteLocal ? (
-                          <Favorite color="error" />
-                        ) : (
-                          <FavoriteBorder />
-                        )}
-                      </IconButton>
+                      <IconButton onClick={handleToggleFavorite}>{ isCurrentFavorite ? (<Favorite color="error" />) : (<FavoriteBorder />)}</IconButton>
 
-                      <IconButton onClick={() => navigate(`/properties/edit/${property.id}`)}>
-                        <Edit />
-                      </IconButton>
-
-                      { property.sellerId === user?.id && 
-                      <IconButton color="error" onClick={handleDelete}>
-                        <Delete />
-                      </IconButton>
+                    { property.sellerId === user?.id && 
+                      <Box>
+                        <IconButton onClick={() => navigate(`${AppRoute.Properties}/edit/${property.id}`)}>
+                          <Edit />
+                        </IconButton>
+                        <IconButton color="error" onClick={handleDelete}>
+                          <Delete />
+                        </IconButton>
+                      </Box>
                       }
                     </Stack>
                     }
@@ -230,50 +143,19 @@ export function PropertyDetailPage() {
 
                 <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                   <Box
-                    sx={{
-                      position: 'relative',
-                      width: '100%',
-                      borderRadius: 2,
-                      overflow: 'hidden'
-                    }}
-                  >
+                    sx={{ position: 'relative', width: '100%', borderRadius: 2, overflow: 'hidden'}}>
                     <Box
                       component="img"
                       src={property.photoUrls?.[imageIndex] || ''}
-                      sx={{
-                        width: '75%',
-                        height: 360,
-                        objectFit: 'cover',
-                        borderRadius: 2
-                      }}
-                    />
+                      sx={{ width: '75%', height: 360, objectFit: 'cover', borderRadius: 2 }}/>
 
                     <IconButton
                       onClick={handlePrevImage}
-                      sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: 10,
-                        transform: 'translateY(-50%)',
-                        bgcolor: '#000000AA',
-                        color: 'white'
-                      }}
-                    >
-                      ‹
+                      sx={{position: 'absolute', top: '50%', left: 10, transform: 'translateY(-50%)', bgcolor: '#000000AA', color: 'white'}}>&lt;
                     </IconButton>
-
                     <IconButton
                       onClick={handleNextImage}
-                      sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        right: 10,
-                        transform: 'translateY(-50%)',
-                        bgcolor: '#000000AA',
-                        color: 'white'
-                      }}
-                    >
-                      ›
+                      sx={{position: 'absolute', top: '50%', right: 10, transform: 'translateY(-50%)', bgcolor: '#000000AA', color: 'white'}}>&gt;
                     </IconButton>
 
                     <Box
@@ -295,10 +177,7 @@ export function PropertyDetailPage() {
                 </Box>
               </Stack>
 
-              <Typography
-                variant="h3"
-                sx={{ mt: 2, color: 'primary.main', fontWeight: 700 }}
-              >
+              <Typography variant="h3" sx={{ mt: 2, color: 'primary.main', fontWeight: 700 }}>
                 {formatPrice(property.price)}
               </Typography>
 
@@ -349,11 +228,7 @@ export function PropertyDetailPage() {
                         <Typography variant="body2" color="text.secondary">
                           Price / m²
                         </Typography>
-                        <Typography>
-                          {formatPrice(
-                            property.price! / property.usableArea!
-                          )}
-                        </Typography>
+                        <Typography>{formatPrice(property.price ?? 0 / property.usableArea!)}</Typography>
                       </Card>
                     </Grid>
 
@@ -371,12 +246,11 @@ export function PropertyDetailPage() {
                 </CardContent>
               </Card>
 
+              
               {property.propertyType === PropertyType.APARTMENT && (
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">
-                      Apartment Details
-                    </Typography>
+                    <Typography variant="h6">Apartment Details</Typography>
 
                     <Grid container spacing={2}>
                       <Grid size={{ xs: 12, sm: 4 }}>
@@ -396,9 +270,7 @@ export function PropertyDetailPage() {
               {property.propertyType === PropertyType.HOUSE && (
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">
-                      House Details
-                    </Typography>
+                    <Typography variant="h6">House Details</Typography>
 
                     <Grid container spacing={2}>
                       <Grid size={{ xs: 12, sm: 4 }}>
@@ -427,22 +299,10 @@ export function PropertyDetailPage() {
                 Contact
               </Typography>
 
-              <Card sx={{ p: 2, mb: 2 }}>
-                Seller ID: {property.sellerId}
-              </Card>
+              <Card sx={{ p: 2, mb: 2 }}>Seller ID: {property.sellerId} </Card>
 
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mb: 1 }}
-                disabled={!isAuthenticated}
-              >
-                Show Phone
-              </Button>
-
-              <Button fullWidth variant="outlined" disabled={!isAuthenticated}>
-                Send Email
-              </Button>
+              <Button fullWidth variant="contained" sx={{ mb: 1 }} disabled={!isAuthenticated}>Show Phone</Button>
+              <Button fullWidth variant="outlined" disabled={!isAuthenticated}>Send Email</Button>
             </CardContent>
           </Card>
         </Grid>
