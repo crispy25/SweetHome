@@ -46,13 +46,13 @@ export interface PageFavoriteResponseDto {
      * @type {number}
      * @memberof PageFavoriteResponseDto
      */
-    totalElements?: number;
+    totalPages?: number;
     /**
      * 
      * @type {number}
      * @memberof PageFavoriteResponseDto
      */
-    totalPages?: number;
+    totalElements?: number;
     /**
      * 
      * @type {number}
@@ -126,8 +126,8 @@ export function PageFavoriteResponseDtoFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'totalElements': json['totalElements'] == null ? undefined : json['totalElements'],
         'totalPages': json['totalPages'] == null ? undefined : json['totalPages'],
+        'totalElements': json['totalElements'] == null ? undefined : json['totalElements'],
         'size': json['size'] == null ? undefined : json['size'],
         'content': json['content'] == null ? undefined : ((json['content'] as Array<any>).map(FavoriteResponseDtoFromJSON)),
         'number': json['number'] == null ? undefined : json['number'],
@@ -151,8 +151,8 @@ export function PageFavoriteResponseDtoToJSONTyped(value?: PageFavoriteResponseD
 
     return {
         
-        'totalElements': value['totalElements'],
         'totalPages': value['totalPages'],
+        'totalElements': value['totalElements'],
         'size': value['size'],
         'content': value['content'] == null ? undefined : ((value['content'] as Array<any>).map(FavoriteResponseDtoToJSON)),
         'number': value['number'],

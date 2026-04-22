@@ -34,6 +34,10 @@ export interface GetAll3Request {
     size?: number;
 }
 
+export interface IsFavoriteRequest {
+    propertyId: string;
+}
+
 export interface RemoveFavoriteRequest {
     propertyId: string;
 }
@@ -142,6 +146,61 @@ export class FavoriteControllerApi extends runtime.BaseAPI {
      */
     async getAll3(requestParameters: GetAll3Request = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PageFavoriteResponseDto> {
         const response = await this.getAll3Raw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates request options for isFavorite without sending the request
+     */
+    async isFavoriteRequestOpts(requestParameters: IsFavoriteRequest): Promise<runtime.RequestOpts> {
+        if (requestParameters['propertyId'] == null) {
+            throw new runtime.RequiredError(
+                'propertyId',
+                'Required parameter "propertyId" was null or undefined when calling isFavorite().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/v1/favorites/{propertyId}`;
+        urlPath = urlPath.replace(`{${"propertyId"}}`, encodeURIComponent(String(requestParameters['propertyId'])));
+
+        return {
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        };
+    }
+
+    /**
+     */
+    async isFavoriteRaw(requestParameters: IsFavoriteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<boolean>> {
+        const requestOptions = await this.isFavoriteRequestOpts(requestParameters);
+        const response = await this.request(requestOptions, initOverrides);
+
+        if (this.isJsonMime(response.headers.get('content-type'))) {
+            return new runtime.JSONApiResponse<boolean>(response);
+        } else {
+            return new runtime.TextApiResponse(response) as any;
+        }
+    }
+
+    /**
+     */
+    async isFavorite(requestParameters: IsFavoriteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<boolean> {
+        const response = await this.isFavoriteRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

@@ -7,11 +7,11 @@
 Name | Type
 ------------ | -------------
 `offset` | number
-`sort` | [Array&lt;SortObject&gt;](SortObject.md)
-`pageNumber` | number
-`pageSize` | number
-`unpaged` | boolean
 `paged` | boolean
+`unpaged` | boolean
+`sort` | [Array&lt;SortObject&gt;](SortObject.md)
+`pageSize` | number
+`pageNumber` | number
 
 ## Example
 
@@ -21,11 +21,11 @@ import type { PageableObject } from ''
 // TODO: Update the object below with actual values
 const example = {
   "offset": null,
-  "sort": null,
-  "pageNumber": null,
-  "pageSize": null,
-  "unpaged": null,
   "paged": null,
+  "unpaged": null,
+  "sort": null,
+  "pageSize": null,
+  "pageNumber": null,
 } satisfies PageableObject
 
 console.log(example)

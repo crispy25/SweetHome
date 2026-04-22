@@ -6,6 +6,7 @@ All URIs are relative to *http://localhost:8090*
 |------------- | ------------- | -------------|
 | [**addFavorite**](FavoriteControllerApi.md#addfavorite) | **POST** /api/v1/favorites/{propertyId} |  |
 | [**getAll3**](FavoriteControllerApi.md#getall3) | **GET** /api/v1/favorites |  |
+| [**isFavorite**](FavoriteControllerApi.md#isfavorite) | **GET** /api/v1/favorites/{propertyId} |  |
 | [**removeFavorite**](FavoriteControllerApi.md#removefavorite) | **DELETE** /api/v1/favorites/{propertyId} |  |
 
 
@@ -132,6 +133,75 @@ example().catch(console.error);
 ### Return type
 
 [**PageFavoriteResponseDto**](PageFavoriteResponseDto.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `*/*`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## isFavorite
+
+> boolean isFavorite(propertyId)
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  FavoriteControllerApi,
+} from '';
+import type { IsFavoriteRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: bearerAuth
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new FavoriteControllerApi(config);
+
+  const body = {
+    // string
+    propertyId: 38400000-8cf0-11bd-b23e-10b96e4ef00d,
+  } satisfies IsFavoriteRequest;
+
+  try {
+    const data = await api.isFavorite(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **propertyId** | `string` |  | [Defaults to `undefined`] |
+
+### Return type
+
+**boolean**
 
 ### Authorization
 
