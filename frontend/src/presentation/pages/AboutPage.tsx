@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { FeedbackControllerApi, FeedbackOptionControllerApi, PageFeedbackResponseDto, FeedbackOptionResponseDto, FeedbackDto, CreateFeedbackRequest, Configuration, FeedbackDtoUserTypeEnum } from '../../infrastructure/apis/client';
 import { Box, Typography, Stack, Paper, Rating, Button, TextField, Pagination, FormControl, Checkbox, FormLabel, ListItemText, MenuItem, Select, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 
-const authConfig = new Configuration({basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => {return localStorage.getItem('authToken') || '';},});
+const authConfig = new Configuration({basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => {return localStorage.getItem('authToken') || '';}});
 const feedbackApi = new FeedbackControllerApi(authConfig);
 const optionApi = new FeedbackOptionControllerApi(authConfig);
 
@@ -19,7 +19,7 @@ export default function AboutPage() {
   const [userType, setUserType] = useState<FeedbackDtoUserTypeEnum>(FeedbackDtoUserTypeEnum.Buyer);
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
 
-  const pageSize = 3;
+  const pageSize = 4;
 
   useEffect(() => {
     loadOptions();
@@ -36,7 +36,7 @@ export default function AboutPage() {
 
       setPageData(json);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -45,7 +45,7 @@ export default function AboutPage() {
       const data = await optionApi.getAll2();
       setOptions(data || []);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -76,16 +76,13 @@ export default function AboutPage() {
   return (
     <Box sx={{ backgroundColor: '#ffffff' }}>
       <Box sx={{ py: 4, ml: 8, mr: 8}}>
-        <Typography variant="h4" sx={{ fontWeight: 600, color: '#000000' }} gutterBottom>
-          About Us
-        </Typography>
-
+        <Typography variant="h4" sx={{ fontWeight: 600, color: '#000000' }}> About Us </Typography>
         <Typography sx={{ mb: 4, color: 'black' }}>
           We are a modern property management platform focused on simplicity,
           transparency, and user experience. Our mission is to make property
           management easy and accessible for everyone.
         </Typography>
-        
+
         <Box sx={{ display: "flex", justifyContent: "center", mt: 8 , mb: 8}}>
           <Box
             component="img"
@@ -95,7 +92,7 @@ export default function AboutPage() {
           />
         </Box>
 
-        <Typography variant="h5" sx={{ mb: 4, color: 'black' }} gutterBottom>
+        <Typography variant="h5" sx={{ mb: 4, color: 'black' }}>
           Customer reviews:
         </Typography>
 
@@ -115,10 +112,6 @@ export default function AboutPage() {
             onChange={(_, value) => setPage(value - 1)}
             color="primary"
             variant="outlined"
-             sx={{
-              '& .MuiPaginationItem-root': { color: 'var(--text-ui)' },
-              '& .MuiPaginationItem-root.Mui-selected': { color: '#4092da' }
-            }}
             showFirstButton
             showLastButton
           />
@@ -188,13 +181,7 @@ export default function AboutPage() {
               </Select>
             </FormControl>
 
-            <Button
-              variant="contained"
-              sx={{ mt: 2 }}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>
+            <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}> Submit </Button>
           </Paper>
         )}
       </Box>

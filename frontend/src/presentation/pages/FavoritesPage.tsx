@@ -8,7 +8,7 @@ import { Box, Typography, CircularProgress, Grid, Card, IconButton, CardMedia, C
 import SavedSearchIcon from '@mui/icons-material/SavedSearch';
 
 export default function FavoritesPage() {
-  const { favorites, loadFavorites, removeFavorite, page, totalPages, loading, isAuthenticated } = useFavorites();
+  const { favorites, loadFavorites, removeFavorite, page, totalPages, isContentLoading, isAuthenticated } = useFavorites();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,10 +46,8 @@ export default function FavoritesPage() {
         </Box>
       }
 
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <>
+      {isContentLoading ? (<CircularProgress />) : (
+        <div>
           <Grid container spacing={2}>
             {favorites.map((fav) => {
               const property = fav.property;
@@ -125,10 +123,12 @@ export default function FavoritesPage() {
                 count={totalPages}
                 page={page + 1}
                 onChange={handlePageChange}
+                showFirstButton
+                showLastButton
               />
             </Box>
           }
-        </>
+        </div>
       )}
     </Box>
   );

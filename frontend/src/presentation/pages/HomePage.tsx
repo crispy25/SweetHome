@@ -12,19 +12,11 @@ export function HomePage() {
   return (
     <Box sx={{ width: '100%', overflowX: 'hidden', backgroundColor: 'white' }}>
       <Box
-        sx={{
-          py: 12,
-          textAlign: 'center',
-          background: 'linear-gradient(to bottom, #7e92e6, #ffffff)',
-        }}
-      >
-        <Container maxWidth={false} disableGutters>
-
+        sx={{py: 12, textAlign: 'center', background: '#ffffff'}}>
+        <Container maxWidth={false}>
           <ApartmentIcon sx={{ fontSize: 80, color: 'primary.main', mb: 4 }} />
 
-          <Typography variant="h3" sx={{ color: "black" }} gutterBottom>
-            Find Your Dream Home
-          </Typography>
+          <Typography variant="h3" sx={{ color: "black" }} gutterBottom>Find Your Dream Home</Typography>
 
           <Typography variant="h6" color="primary" sx={{ mb: 4 }}>
             Your trusted platform for real estate properties.
@@ -117,12 +109,12 @@ export function HomePage() {
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Typography variant="h4">500+</Typography>
+              <Typography variant="h4">200+</Typography>
               <Typography>Satisfied Users</Typography>
             </Grid>
 
             <Grid size={{ xs: 12, md: 4 }}>
-              <Typography variant="h4">50+</Typography>
+              <Typography variant="h4">30+</Typography>
               <Typography>Cities Covered</Typography>
             </Grid>
 

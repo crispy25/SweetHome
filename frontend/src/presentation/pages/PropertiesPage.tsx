@@ -4,16 +4,16 @@ import { Configuration, PagePropertyResponseDto, PropertyControllerApi,} from ".
 import { Grid, Card, TextField, Box, Typography, FormControl, InputLabel, Select, MenuItem, Button, Collapse, Divider, CircularProgress, CardMedia, CardContent, Pagination } from "@mui/material";
 import { useDebounce } from "../../hooks/useDebounce";
 import { AppRoute } from "../../routes";
-import { PropertyType } from "../../types/PropertyTypes";
+import { PropertyType } from "../../types/PropertyType";
 
-export enum SortBy {
+enum SortBy {
   PRICE = "PRICE",
   CREATED_AT = "CREATED_AT",
   ROOMS = "ROOMS",
   USABLE_AREA = "USABLE_AREA",
 }
 
-export enum Order {
+enum Order {
   ASC = "ASC",
   DESC = "DESC",
 }
@@ -21,18 +21,7 @@ export enum Order {
 const authConfig = new Configuration({ basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => localStorage.getItem("authToken") || "",});
 const api = new PropertyControllerApi(authConfig);
 
-const NumberField = memo(
-  ({
-    label,
-    field,
-    value,
-    onChange,
-  }: {
-    label: string;
-    field: string;
-    value: any;
-    onChange: (field: string, value: any) => void;
-  }) => {
+const NumberField = memo(({label, field, value, onChange}: {label: string; field: string; value: any; onChange: (field: string, value: any) => void;}) => {
     return (
       <Grid size={{ xs: 12, md: 3 }}>
         <Card sx={{ p: 2 }}>
@@ -56,9 +45,9 @@ export default function PropertiesPage() {
   const [page, setPage] = useState(0);
   const [size] = useState(6);
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.CREATED_AT);
-  const [order] = useState<Order>(Order.DESC);
+  const [order, setOrder] = useState<Order>(Order.DESC);
   const [data, setData] = useState<PagePropertyResponseDto | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const debouncedFilters = useDebounce(draftFilters, 500);
 
@@ -75,7 +64,7 @@ export default function PropertiesPage() {
   const cleanFilters = (obj: any) => Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined && v !== "") );
 
   const fetchProperties = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const response = await api.searchRaw({propertySearchDto: cleanFilters(debouncedFilters), page, size, sortBy, order});
       const json = (await response.raw.json()) as PagePropertyResponseDto;
@@ -84,7 +73,7 @@ export default function PropertiesPage() {
       setData({});
       console.error(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -112,7 +101,7 @@ export default function PropertiesPage() {
       </Typography>
 
       <Grid container spacing={2} sx={{ mb: 2 }}>
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card sx={{ p: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Property Type</InputLabel>
@@ -131,7 +120,7 @@ export default function PropertiesPage() {
         {renderNumberField("Min Price", "minPrice")}
         {renderNumberField("Max Price", "maxPrice")}
 
-        <Grid size={{ xs: 12, md: 3 }}>
+        <Grid size={{ xs: 12, md: 2 }}>
           <Card sx={{ p: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Sort By</InputLabel>
@@ -148,7 +137,24 @@ export default function PropertiesPage() {
             </FormControl>
           </Card>
         </Grid>
+        <Grid size={{ xs: 12, md: 2 }}>
+          <Card sx={{ p: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel>Order</InputLabel>
+              <Select
+                value={order}
+                label="Sort By"
+                onChange={(e) => setOrder(e.target.value as Order)}
+              >
+                <MenuItem value={Order.ASC}>Ascending</MenuItem>
+                <MenuItem value={Order.DESC}>Descending</MenuItem>
+              </Select>
+            </FormControl>
+          </Card>
+        </Grid>
+        
       </Grid>
+      
 
       <Box sx={{ mb: 2 }}>
         <Button
@@ -173,7 +179,7 @@ export default function PropertiesPage() {
             {renderNumberField("Max Usable Area", "maxUsableArea")}
             {renderNumberField("Min Construction Year", "minConstructionYear")}
             {renderNumberField("Max Construction Year", "maxConstructionYear")}
-            {propertyType === "HOUSE" && (
+            {propertyType === PropertyType.HOUSE && (
               <>
                 {renderNumberField("Min Floors", "minFloors")}
                 {renderNumberField("Max Floors", "maxFloors")}
@@ -194,7 +200,7 @@ export default function PropertiesPage() {
               </>
             )}
 
-            {propertyType === "APARTMENT" && (
+            {propertyType === PropertyType.APARTMENT && (
               <>
                 {renderNumberField("Min Floor", "minFloor")}
                 {renderNumberField("Max Floor", "maxFloor")}
@@ -215,12 +221,8 @@ export default function PropertiesPage() {
         </Box>
       </Collapse>
 
-      {loading ? (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 6 }}>
-          <CircularProgress />
-        </Box>
-      ) : (
-        <>
+      {isLoading ? (<Box sx={{ display: "flex", justifyContent: "center", mt: 6 }}><CircularProgress /></Box>) : (
+        <div>
           <Grid container spacing={3}>
             {data?.content?.map((property: any) => (
               <Grid size={{ xs: 12, md: 4 }} key={property.id}>
@@ -236,27 +238,15 @@ export default function PropertiesPage() {
                     },
                   }}
                 >
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={property.photoUrls?.[0] || "/"}
-                  />
+                  <CardMedia component="img" height="200" image={property.photoUrls?.[0] || ""} />
 
                   <CardContent>
                     <Typography variant="h6">{property.title}</Typography>
                     <Typography variant="body2" sx={{ color: "text.secondary" }}>
                       {property.address}
                     </Typography>
-                    <Typography
-                      variant="h6"
-                      color="primary"
-                      sx={{ mt: 1, fontWeight: 700 }}
-                    >
-                      €{property.price}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      {property.rooms} rooms - {property.usableArea} m²
-                    </Typography>
+                    <Typography variant="h6" color="primary" sx={{ mt: 1, fontWeight: 700 }}>€{property.price}</Typography>
+                    <Typography variant="body2" sx={{ mt: 1 }}>{property.rooms} rooms - {property.usableArea} m²</Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -268,9 +258,11 @@ export default function PropertiesPage() {
               count={data?.totalPages || 1}
               page={page + 1}
               onChange={(_, v) => setPage(v - 1)}
+              showFirstButton
+              showLastButton
             />
           </Box>
-        </>
+        </div>
       )}
     </Box>
   );

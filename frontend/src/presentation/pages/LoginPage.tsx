@@ -11,7 +11,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ export default function Login() {
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       const ok = await login({ email, password });
@@ -34,7 +34,7 @@ export default function Login() {
     } catch {
       setError('Login failed. Please try again.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -87,9 +87,9 @@ export default function Login() {
               fullWidth
               variant="contained"
               sx={{ mt: 2 }}
-              disabled={loading}
+              disabled={isLoading}
             >
-              {loading ? <CircularProgress size={24} /> : 'Login'}
+              {isLoading ? <CircularProgress size={24} /> : 'Login'}
             </Button>
 
             <Typography variant="body2" align="center" sx={{ mt: 2 }}>

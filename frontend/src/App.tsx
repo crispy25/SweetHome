@@ -23,11 +23,11 @@ export function App() {
                 <Route path={AppRoute.Login} element={<LoginPage />} />
                 <Route path={AppRoute.Register} element={<RegisterPage />} />
                 <Route path={AppRoute.Properties} element={<PropertiesPage />} />
-                <Route path="/properties/:id" element={<PropertyDetailPage />} />
-                <Route path={AppRoute.About} element={<AboutPage />} />
+                <Route path={`${AppRoute.Properties}/:id`} element={<PropertyDetailPage />} />
+                <Route path={`${AppRoute.Properties}/edit/:id`} element={<PropertyEditPage />} /> 
+                <Route path={`${AppRoute.Properties}/create`} element={<PropertyEditPage />} />
                 <Route path={AppRoute.Favorites} element={<FavoritesPage />} />
-                <Route path="/properties/edit/:id" element={<PropertyEditPage />} /> 
-                <Route path="/properties/create" element={<PropertyEditPage />} />
+                <Route path={AppRoute.About} element={<AboutPage />} />
               </Routes>
           </FavoritesProvider>
         </AuthProvider>
