@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { FeedbackControllerApi, FeedbackOptionControllerApi, PageFeedbackResponseDto, FeedbackOptionResponseDto, FeedbackDto, CreateFeedbackRequest, Configuration, FeedbackDtoUserTypeEnum } from '../../infrastructure/apis/client';
-import { Container, Box, Typography, Stack, Paper, Rating, Button, TextField, Pagination, FormControl, Checkbox, FormLabel, ListItemText, MenuItem, Select, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Box, Typography, Stack, Paper, Rating, Button, TextField, Pagination, FormControl, Checkbox, FormLabel, ListItemText, MenuItem, Select, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 
 const authConfig = new Configuration({basePath: import.meta.env.VITE_APP_API_BASE_URL, accessToken: async () => {return localStorage.getItem('authToken') || '';},});
 const feedbackApi = new FeedbackControllerApi(authConfig);
@@ -74,13 +74,13 @@ export default function AboutPage() {
   };
 
   return (
-    <Box sx={{ backgroundColor: '#a4accd' }}>
+    <Box sx={{ backgroundColor: '#ffffff' }}>
       <Box sx={{ py: 4, ml: 8, mr: 8}}>
-        <Typography variant="h4" color='primary' gutterBottom>
+        <Typography variant="h4" sx={{ color: '#000000' }} gutterBottom>
           About Us
         </Typography>
 
-        <Typography sx={{ mb: 4, color: 'white' }}>
+        <Typography sx={{ mb: 4, color: 'black' }}>
           We are a modern property management platform focused on simplicity,
           transparency, and user experience. Our mission is to make property
           management easy and accessible for everyone.
@@ -95,13 +95,13 @@ export default function AboutPage() {
           />
         </Box>
 
-        <Typography variant="h5" sx={{ mb: 4, color: 'white' }} gutterBottom>
+        <Typography variant="h5" sx={{ mb: 4, color: 'black' }} gutterBottom>
           Customer reviews:
         </Typography>
 
         <Stack spacing={2} sx={{ mb: 2 }}>
           {pageData?.content?.map((f, i) => (
-            <Paper key={i} sx={{ p: 2 }}>
+            <Paper key={i} sx={{ p: 3, backgroundColor: '#e7ebf0' }}>
               <Rating value={f.rating || 0} readOnly />
               <Typography>{f.message}</Typography>
             </Paper>
@@ -117,7 +117,7 @@ export default function AboutPage() {
             variant="outlined"
              sx={{
               '& .MuiPaginationItem-root': { color: 'var(--text-ui)' },
-              '& .MuiPaginationItem-root.Mui-selected': { color: '#ffffff' }
+              '& .MuiPaginationItem-root.Mui-selected': { color: '#4092da' }
             }}
             showFirstButton
             showLastButton
@@ -125,7 +125,7 @@ export default function AboutPage() {
         </Stack>
 
         {token && (
-          <Paper sx={{ p: 3 }}>
+          <Paper sx={{ p: 3, backgroundColor: '#e7ebf0' }}>
             <Typography variant="h6" gutterBottom>
               <strong>Leave Feedback</strong>
             </Typography>
