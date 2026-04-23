@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import HomeIcon from '@mui/icons-material/Home';
 import { useAuth } from "../../contexts/AuthContext";
 import { AppRoute } from "../../routes";
+import { Grid } from '@mui/material';
 
 const pages = [
     { label: 'Properties', path: AppRoute.Properties },
@@ -79,8 +80,9 @@ function NavBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            {!user ? (<Button color="inherit" onClick={() => navigate(AppRoute.Login)}>Login</Button>) : (
-              <>
+            {!user ? (<Grid container spacing={3}><Button color="inherit" onClick={() => navigate(AppRoute.Login)}>Login</Button>
+                        <Button color="inherit" onClick={() => navigate(AppRoute.Register)}>Register</Button></Grid>) :
+            ( <>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu}>
                     <Avatar alt={user.username || 'Me'} />
