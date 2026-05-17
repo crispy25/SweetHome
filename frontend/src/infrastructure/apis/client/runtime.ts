@@ -137,7 +137,9 @@ export class BaseAPI {
         if (response && (response.status >= 200 && response.status < 300)) {
             return response;
         }
-        throw new ResponseError(response, 'Response returned an error code');
+
+        const json = await response.json();
+        throw new ResponseError(response, json?.error_message || 'Response returned an error code');
     }
 
     private async createFetchParams(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction) {
@@ -247,7 +249,7 @@ export class BaseAPI {
         next.middleware = this.middleware.slice();
         return next;
     }
-};
+}
 
 function isBlob(value: any): value is Blob {
     return typeof Blob !== 'undefined' && value instanceof Blob;

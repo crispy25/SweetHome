@@ -74,7 +74,7 @@ export default function PropertyFormPage() {
 
       const fullDto = isApartment ? {...baseDto, comfort: Number(form.comfort), floor: Number(form.floor), layout: form.layout} :
                                 {...baseDto, floors: Number(form.floors), landArea: Number(form.landArea), houseType: form.houseType};
-      const dto = Object.fromEntries(Object.entries(fullDto).filter(([, v]) => v != null && v != undefined && !Number.isNaN(v)));
+      const dto = Object.fromEntries(Object.entries(fullDto).filter(([, v]) => v != null && !Number.isNaN(v)));
 
       if (isApartment)
         isEdit ? await apartmentApi.patch1({ id: id, apartmentPatchDto: dto } as any) : await apartmentApi.create1({ apartmentDto: dto } as any);
@@ -84,8 +84,10 @@ export default function PropertyFormPage() {
       toast.success(isEdit ? 'Updated' : 'Created');
       navigate(AppRoute.Properties);
     } catch (e) {
-      console.error(e);
-      toast.error('Failed to save');
+      if (e instanceof Error) {
+        console.error(e.message);
+        toast.error('Failed to save ' + e.message);
+      }
     }
   };
 

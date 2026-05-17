@@ -74,7 +74,7 @@ export default function AboutPage() {
   };
 
   return (
-    <Box sx={{ height: '100vh', backgroundColor: '#ffffff' }}>
+    <Box sx={{ backgroundColor: '#ffffff' }}>
       <Box sx={{ py: 4, ml: 8, mr: 8}}>
         <Typography variant="h4" sx={{ fontWeight: 600, color: '#000000' }}> About Us </Typography>
         <Typography sx={{ mb: 4, color: 'black' }}>
